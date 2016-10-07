@@ -1,2 +1,49 @@
 # missingdata
 Research repository for missing data
+
+*************************************************************
+*********************** FIRST STEPS *************************
+*************************************************************
+Please, follow the next command sequence to clone and prepare the repository to work on it for the first time:
+	1 - Clone the repository:
+		# git clone https://github.com/chalearn/missingdata
+	2 - Change the branch to the develop branch (by default the master branch is used):
+		# git checkout develop
+*************************************************************
+
+
+*************************************************************
+*************** UPDATE REPOSITORY PROCESS *******************
+*************************************************************
+To update your local changes to the GitHub repository follow the next command sequence:
+	1 - Previously to the commit step, add the local change files:
+		# git add <files to commit>
+	If you want to add the changes of a complete folder use:
+		# git add <folder name> or 
+		# cd <folder name> and # git add .
+	2 - Commit the changes (add a significant information message about the changes realized):
+		# git commit -m "Information message betwenn quotation marks"
+*************************************************************
+
+
+*************************************************************
+********************* USEFUL COMMANDS ***********************
+*************************************************************
+
+*************************************************************
+
+
+
+*************************************************************
+********************* USEFUL COMMANDS ***********************
+*************************************************************
+Useful commands to interact with GitHub platform are shown below:
+	- Show the status of your local files and check the branch in wich you are working actually:
+		# git status
+	- 
+	- 
+	- 
+	- 
+	- 
+	- 
+
