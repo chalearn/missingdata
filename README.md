@@ -94,8 +94,9 @@ It must be **always** performed **before** you begin **working**. To download th
 		
 		# git config --global core.editor "<editor name>"
 
-- Interesting web about using GitHub and Git:
+- Interesting webs about using/download GitHub and Git framwork:
 
  - [Web Page](http://rogerdudler.github.io/git-guide/)
+ - [Git Framework Download](https://git-scm.com/)
 
 *************************************************************
