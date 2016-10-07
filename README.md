@@ -25,9 +25,6 @@ Please, follow the next command sequence to clone and prepare the repository to 
 		# git config --global user.name "your name"
 
 *************************************************************
-
-
-*************************************************************
 UPLOAD REPOSITORY PROCESS
 
 To upload your local changes to the GitHub repository follow the next command sequence:
@@ -59,9 +56,6 @@ To upload your local changes to the GitHub repository follow the next command se
 		# git push
 
 *************************************************************
-
-
-*************************************************************
 DOWNLOAD REPOSITORY PROCESS
 
 To download the changes from the GitHub repository to own local copy follow the next command sequence:
@@ -69,9 +63,6 @@ To download the changes from the GitHub repository to own local copy follow the 
 	1 - Obtain the GitHub changes:
 
 		# git pull
-*************************************************************
-
-
 
 *************************************************************
 USEFUL EXTRA INFORMATION 
