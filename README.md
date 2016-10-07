@@ -1,14 +1,13 @@
-# missingdata
-Research repository for missing data
+# Missing Data Repository
 
 *************************************************************
 BASIC INFORMATION
-*************************************************************
-Repository for software and solutions for missing data problems. The repository is original divided in two branch: (i) the master branch for final complete functionally versions, and (ii) the develop branch to develop new implementations and modify the existing ones. It is possible to create new branches if parallel developmetns are necessary. Some commands and informations are detailed below. 
+
+Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch: (i) the master branch for final complete functionally versions, and (ii) the develop branch to develop new implementations and modify the existing ones. It is possible to create new branches if parallel developmetns are necessary. Some commands and informations are detailed below. 
 
 *************************************************************
 FIRST STEPS
-*************************************************************
+
 Please, follow the next command sequence to clone and prepare the repository to work on it for the first time:
 
 	1 - Clone the repository:
@@ -29,8 +28,8 @@ Please, follow the next command sequence to clone and prepare the repository to 
 
 
 *************************************************************
-*************** UPLOAD REPOSITORY PROCESS *******************
-*************************************************************
+UPLOAD REPOSITORY PROCESS
+
 To upload your local changes to the GitHub repository follow the next command sequence:
 
 	1 - Previously to the commit step, add the local change files:
@@ -64,7 +63,7 @@ To upload your local changes to the GitHub repository follow the next command se
 
 *************************************************************
 DOWNLOAD REPOSITORY PROCESS
-*************************************************************
+
 To download the changes from the GitHub repository to own local copy follow the next command sequence:
 
 	1 - Obtain the GitHub changes:
@@ -76,7 +75,7 @@ To download the changes from the GitHub repository to own local copy follow the 
 
 *************************************************************
 USEFUL EXTRA INFORMATION 
-*************************************************************
+
 Useful commands to interact with GitHub platform are shown below:
 
 	- Show the status of your local files and check the branch in wich you are working actually:
@@ -102,7 +101,5 @@ Useful commands to interact with GitHub platform are shown below:
 Interesting web about using GitHub and Git:
 	
 	http://rogerdudler.github.io/git-guide/
-
-*************************************************************
 
 *************************************************************

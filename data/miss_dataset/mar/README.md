@@ -1,8 +1,8 @@
-# mar
+# Missing At Random (MAR)
 
 *************************************************************
 BASIC INFORMATION
-*************************************************************
+
 Folder to store the mar datasets created on the experimentation process.
 
 *************************************************************

@@ -1,8 +1,8 @@
-# Missing Value Datasets
+# Classification Sources
 
 *************************************************************
 BASIC INFORMATION
 
-Folder to store the missing value datasets created on the experimentation process.
+Folder to store the classification source files developed on R language.
 
 *************************************************************
