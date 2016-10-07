@@ -24,8 +24,12 @@ To update your local changes to the GitHub repository follow the next command se
 	If you want to add the changes of a complete folder use:
 		# git add <folder name> or 
 		# cd <folder name> and # git add .
-	2 - Commit the changes (add a significant information message about the changes realized):
+	2 - Commit the changes to your local repository (add a significant information message about the changes realized):
 		# git commit -m "Information message betwenn quotation marks"
+	3 - Push the changes to the central repository (in the same branch that you are working):
+		# git push
+	4 - Push the changes to the master branch. This option will be used only when the developed code works correctly and a final version can be released:
+		# git push request
 *************************************************************
 
 
