@@ -92,8 +92,8 @@ It must be **always** performed **before** you begin **working**. To download th
 
  - Change the default message editor:
 		
-		# git config --global core.editor "<editor name>"
-
+			# git config --global core.editor "<editor name>"
+		
 - Interesting webs about using/download GitHub and Git framwork:
 
  - [Web Page](http://rogerdudler.github.io/git-guide/)
