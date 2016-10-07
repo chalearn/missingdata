@@ -76,24 +76,24 @@ It must be **always** performed **before** you begin **working**. To download th
 
  - Show the status of your local files and check the branch in wich you are working actually:
 
-		# git status
+			# git status
 
  - Change between diferent branches:
 
-		# git checkout <branch name>
+			# git checkout <branch name>
 
  - Create new branch:
 
-		# git checkout -b <branch name>
+			# git checkout -b <branch name>
 
  - Delete existing branch:
 
-		# git checkout -d <branch name>
+			# git checkout -d <branch name>
 
  - Change the default message editor:
 		
-		# git config --global core.editor "<editor name>"
-
+			# git config --global core.editor "<editor name>"
+		
 - Interesting webs about using/download GitHub and Git framwork:
 
  - [Web Page](http://rogerdudler.github.io/git-guide/)
