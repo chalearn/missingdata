@@ -3,7 +3,12 @@
 *************************************************************
 **BASIC INFORMATION**
 
-Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch: (i) the master branch for final complete functionally versions, and (ii) the develop branch to develop new implementations and modify the existing ones. It is possible to create new branches if parallel developmetns are necessary. Some commands and informations are detailed below. 
+Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch:
+
+1. The **master** branch: to store final complete functionally versions.
+2. The **develop** branch to develop new implementations and modify the existing ones.
+
+If parallel developments are necessary it is possible to create new branches. Some commands and informations are detailed below. 
 
 *************************************************************
 **FIRST STEPS**
@@ -67,30 +72,30 @@ It must be **always** performed **before** you begin **working**. To download th
 *************************************************************
 **USEFUL EXTRA INFORMATION**
 
-Useful commands to interact with GitHub platform are shown below:
+- Useful commands to interact with GitHub platform are shown below:
 
-- Show the status of your local files and check the branch in wich you are working actually:
+ - Show the status of your local files and check the branch in wich you are working actually:
 
 		# git status
 
-- Change between diferent branches:
+ - Change between diferent branches:
 
 		# git checkout <branch name>
 
-- Create new branch:
+ - Create new branch:
 
 		# git checkout -b <branch name>
 
-- Delete existing branch:
+ - Delete existing branch:
 
 		# git checkout -d <branch name>
 
-- Change the default message editor:
+ - Change the default message editor:
 		
 		# git config --global core.editor "<editor name>"
 
-Interesting web about using GitHub and Git:
+- Interesting web about using GitHub and Git:
 
-- [Web Page](http://rogerdudler.github.io/git-guide/)
+ - [Web Page](http://rogerdudler.github.io/git-guide/)
 
 *************************************************************
