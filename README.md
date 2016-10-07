@@ -4,6 +4,8 @@ Research repository for missing data
 *************************************************************
 BASIC INFORMATION
 *************************************************************
+Repository for software and solutions for missing data problems. The repository is original divided in two branch: (i) the master branch for final complete functionally versions, and (ii) the develop branch to develop new implementations and modify the existing ones. It is possible to create new branches if parallel developmetns are necessary. Some commands and informations are detailed below. 
+*************************************************************
 
 *************************************************************
 FIRST STEPS
