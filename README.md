@@ -2,7 +2,11 @@
 Research repository for missing data
 
 *************************************************************
-*********************** FIRST STEPS *************************
+BASIC INFORMATION
+*************************************************************
+
+*************************************************************
+FIRST STEPS
 *************************************************************
 Please, follow the next command sequence to clone and prepare the repository to work on it for the first time:
 
@@ -56,7 +60,7 @@ To upload your local changes to the GitHub repository follow the next command se
 
 
 *************************************************************
-**************** DOWNLOAD REPOSITORY PROCESS ****************
+DOWNLOAD REPOSITORY PROCESS
 *************************************************************
 To download the changes from the GitHub repository to own local copy follow the next command sequence:
 
@@ -68,7 +72,7 @@ To download the changes from the GitHub repository to own local copy follow the 
 
 
 *************************************************************
-**************** USEFUL EXTRA INFORMATION *******************
+USEFUL EXTRA INFORMATION 
 *************************************************************
 Useful commands to interact with GitHub platform are shown below:
 
@@ -91,3 +95,7 @@ Useful commands to interact with GitHub platform are shown below:
 Interesting web about using GitHub and Git:
 	
 	http://rogerdudler.github.io/git-guide/
+
+*************************************************************
+
+*************************************************************
