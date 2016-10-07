@@ -9,6 +9,9 @@ Please, follow the next command sequence to clone and prepare the repository to 
 		# git clone https://github.com/chalearn/missingdata
 	2 - Change the branch to the develop branch (by default the master branch is used):
 		# git checkout develop
+	3 - Set up your personal configuration (name and email address):
+		# git config --global user.email "you@example.com"
+		# git config --global user.name "your name"
 *************************************************************
 
 
