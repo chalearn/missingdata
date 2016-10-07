@@ -1,35 +1,40 @@
 # Missing Data Repository
 
 *************************************************************
-BASIC INFORMATION
+**BASIC INFORMATION**
 
-Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch: (i) the master branch for final complete functionally versions, and (ii) the develop branch to develop new implementations and modify the existing ones. It is possible to create new branches if parallel developmetns are necessary. Some commands and informations are detailed below. 
+Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch:
+
+1. The **master** branch: to store final complete functionally versions.
+2. The **develop** branch to develop new implementations and modify the existing ones.
+
+If parallel developments are necessary it is possible to create new branches. Some commands and informations are detailed below. 
 
 *************************************************************
-FIRST STEPS
+**FIRST STEPS**
 
 Please, follow the next command sequence to clone and prepare the repository to work on it for the first time:
 
-	1 - Clone the repository:
+1. Clone the repository:
 
 		# git clone https://github.com/chalearn/missingdata
 
-	2 - Change the branch to the develop branch (by default the master branch is used):
+2. Change the branch to the develop branch (by default the master branch is used):
 
 		# git checkout develop
 
-	3 - Set up your personal configuration (name and email address):
+3. Set up your personal configuration (name and email address):
 
 		# git config --global user.email "you@example.com"
 
 		# git config --global user.name "your name"
 
 *************************************************************
-UPLOAD REPOSITORY PROCESS
+**UPLOAD REPOSITORY PROCESS**
 
 To upload your local changes to the GitHub repository follow the next command sequence:
 
-	1 - Previously to the commit step, add the local change files:
+1. Previously to the commit step, add the local change files:
 
 		# git add <files to commit>
 
@@ -39,15 +44,15 @@ To upload your local changes to the GitHub repository follow the next command se
 
 		# cd <folder name> and # git add .
 
-	2 - Commit the changes to your local repository (add a significant information message about the changes realized):
+2. Commit the changes to your local repository (add a significant information message about the changes realized):
 
 		# git commit -m "Information message betwenn quotation marks"
 
-	3 - Push the changes to the central repository (in the same branch that you are working):
+3. Push the changes to the central repository (in the same branch that you are working):
 
 		# git push
 
-	4 - Push the changes to the master branch. This option will be used only when the developed code works correctly and a final version can be released:
+4. Push the changes to the master branch. This option will be used only when the developed code works correctly and a final version can be released:
 
 		# git checkout master
 
@@ -56,41 +61,41 @@ To upload your local changes to the GitHub repository follow the next command se
 		# git push
 
 *************************************************************
-DOWNLOAD REPOSITORY PROCESS
+**DOWNLOAD REPOSITORY PROCESS**
 
-To download the changes from the GitHub repository to own local copy follow the next command sequence:
+It must be **always** performed **before** you begin **working**. To download the changes from the GitHub repository to own local copy follow the next command sequence:
 
-	1 - Obtain the GitHub changes:
+1. Obtain the GitHub changes:
 
 		# git pull
 
 *************************************************************
-USEFUL EXTRA INFORMATION 
+**USEFUL EXTRA INFORMATION**
 
-Useful commands to interact with GitHub platform are shown below:
+- Useful commands to interact with GitHub platform are shown below:
 
-	- Show the status of your local files and check the branch in wich you are working actually:
+ - Show the status of your local files and check the branch in wich you are working actually:
 
 		# git status
 
-	- Change between diferent branches:
+ - Change between diferent branches:
 
 		# git checkout <branch name>
 
-	- Create new branch:
+ - Create new branch:
 
 		# git checkout -b <branch name>
 
-	- Delete existing branch:
+ - Delete existing branch:
 
 		# git checkout -d <branch name>
 
-	- Change the default message editor:
+ - Change the default message editor:
 		
 		# git config --global core.editor "<editor name>"
 
-Interesting web about using GitHub and Git:
-	
-	http://rogerdudler.github.io/git-guide/
+- Interesting web about using GitHub and Git:
+
+ - [Web Page](http://rogerdudler.github.io/git-guide/)
 
 *************************************************************
