@@ -56,6 +56,8 @@ To upload your local changes to the GitHub repository follow the next command se
 
 		# git merge <branch name>
 
+		# git push
+
 *************************************************************
 
 
@@ -91,6 +93,10 @@ Useful commands to interact with GitHub platform are shown below:
 	- Delete existing branch:
 
 		# git checkout -d <branch name>
+
+	- Change the default message editor:
+		
+		# git config --global core.editor "<editor name>"
 
 Interesting web about using GitHub and Git:
 	
