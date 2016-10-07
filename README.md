@@ -94,6 +94,10 @@ Useful commands to interact with GitHub platform are shown below:
 
 		# git checkout -d <branch name>
 
+	- Change the default message editor:
+		
+		# git config --global core.editor "<editor name>"
+
 Interesting web about using GitHub and Git:
 	
 	http://rogerdudler.github.io/git-guide/
