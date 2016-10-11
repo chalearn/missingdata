@@ -7,12 +7,22 @@
 %1) no probes = Gisette_noprobe
 %2) with probes (original) = Gisette
 
-data_dir = '../Data/Gisette/'; % or '../Data/Gisette_noprobe/'
+% Add the utils folder to Matlab path to start the file load process (including libs).
+utils_dir = '../utils';
+addpath(utils_dir);
+% Obtain the dir of each relevant folder in the repository.
+[rootdir datadir graphsdir srcdir resultsdir] = load_path();
 
-X=load([data_dir 'gisette_train.data']);
-Y=load([data_dir 'gisette_train.labels']);
-F=read_label([data_dir 'gisette_feat.info']); % Know the identity of the probes
-T=load([data_dir 'gisette_feat.labels']); % +1 for a real feature; -1 for a probe
+% Set the dataset name.
+dataset_name = 'Gisette';
+% Set the dataset folder.
+dataset_type = ['orig_dataset'];
+dataset_folder = [datadir filesep dataset_type filesep dataset_name filesep];
+
+X=load([dataset_folder 'gisette_train.data']);
+Y=load([dataset_folder 'gisette_train.labels']);
+F=read_label([dataset_folder 'gisette_feat.info']); % Know the identity of the probes
+T=load([dataset_folder 'gisette_feat.labels']); % +1 for a real feature; -1 for a probe
 
 % Take a look at the digits
 M=browse_digit(X,Y,F);
@@ -21,7 +31,6 @@ M=browse_digit(X,Y,F);
 % The function returns the image you were looking at when you exited
 
 % Learn a simple model
-addpath('../CLOP');
 use_spider_clop;
 
 %my_classifier=svc({'coef0=1','degree=3','gamma=0','shrinkage=1'});
@@ -35,8 +44,8 @@ D = data (X, Y);
 auc_tr = auc(training_results); % training_results.X = predictions, training_results.Y = targets
 
 % Performance on validation set
-Xv=load([data_dir 'gisette_valid.data']);
-Yv=load([data_dir 'gisette_valid.labels']);
+Xv=load([dataset_folder 'gisette_valid.data']);
+Yv=load([dataset_folder 'gisette_valid.labels']);
 Dv = data (Xv, Yv);
 validation_results = test(my_trained_model, Dv);
 auc_va = auc(validation_results);
@@ -44,8 +53,8 @@ auc_va = auc(validation_results);
 %roc(validation_results);
 
 % Performance on test set
-Xt=load([data_dir 'gisette_test.data']);
-Yt=load([data_dir 'gisette_test.labels']);
+Xt=load([dataset_folder 'gisette_test.data']);
+Yt=load([dataset_folder 'gisette_test.labels']);
 Dt = data (Xt, Yt);
 test_results = test(my_trained_model, Dt);
 auc_te = auc(test_results);
