@@ -6,7 +6,6 @@ function [h, spefound, senfound, espefound, esenfound] = roc(Output, Target, sen
 % Returns:
 % h     -- Figure handle.
 % Isabelle Guyon -- March-June 2003 -- isabelle@clopinet.com
-
 if nargin<3, senval=[]; end
 if nargin<4, speval=[]; end
 if (nargin<5||isempty(sim_name)), sim_name=''; end
@@ -14,8 +13,6 @@ if (nargin<6||isempty(silent)), silent=0; end
 if nargin<7 || h==0, h=[]; end
 if nargin<8 || isempty(col), col='k'; end
 if nargin<9, inv_axis=0; end
-
-inv_axis=1;
 
 Posidx = find(Target>0);
 Negidx = find(Target<=0);
@@ -246,9 +243,9 @@ if ~silent
     
     if ~overlay
         if (~isempty(senval) & ~isempty(speval))
-            title(['AUC=' num2str(round(10000*AUC)/10000) ' -- (sensitivity, specificity): (', num2str(senval), ', ' num2str(round(100*spefound)/100), '), (' , num2str(round(100*senfound)/100) ', ', num2str(speval), ')']);
+            title(['AUROC=' num2str(round(10000*AUC)/10000) ' -- (sensitivity, specificity): (', num2str(senval), ', ' num2str(round(100*spefound)/100), '), (' , num2str(round(100*senfound)/100) ', ', num2str(speval), ')']);
         else
-            title(['AUC=' num2str(round(10000*AUC)/10000)], 'Fontsize', 14);
+            title(['AUROC=' num2str(round(10000*AUC)/10000)], 'Fontsize', 14);
         end
         if inv_axis
             %xlabel('1-Specificity');

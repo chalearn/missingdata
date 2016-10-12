@@ -19,20 +19,27 @@ dataset_name = 'Gisette';
 dataset_type = ['orig_dataset'];
 dataset_folder = [datadir filesep dataset_type filesep dataset_name filesep];
 
+% Create a folder to save the different graphs of the dataset.
+graphs_folder = [graphsdir filesep dataset_name];
+mkdir(graphs_folder);
+% Create a folder to save the different aurocs for each features selected
+% by feature selection methods. 
+auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type];
+mkdir(auroc_by_fs_folder);
+
 X=load([dataset_folder 'gisette_train.data']);
 Y=load([dataset_folder 'gisette_train.labels']);
 F=read_label([dataset_folder 'gisette_feat.info']); % Know the identity of the probes
 T=load([dataset_folder 'gisette_feat.labels']); % +1 for a real feature; -1 for a probe
 
 % Take a look at the digits
-M=browse_digit(X,Y,F);
+%M=browse_digit(X,Y,F);
 % Note: If you use the plain Gisette_noprobe, do niot load F and use
 % M=browse_digit(X,Y);
 % The function returns the image you were looking at when you exited
 
 % Learn a simple model
 use_spider_clop;
-
 %my_classifier=svc({'coef0=1','degree=3','gamma=0','shrinkage=1'});
 
 my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
@@ -50,21 +57,23 @@ Dv = data (Xv, Yv);
 validation_results = test(my_trained_model, Dv);
 auc_va = auc(validation_results);
 
-%roc(validation_results);
-
+h_auroc = roc(validation_results);
+savefig(h_auroc, [auroc_by_fs_folder filesep 'auroc_' dataset_type]);
+set(h_auroc,'Visible','off');
+close(h_auroc);
 % Performance on test set
 Xt=load([dataset_folder 'gisette_test.data']);
 Yt=load([dataset_folder 'gisette_test.labels']);
 Dt = data (Xt, Yt);
-test_results = test(my_trained_model, Dt);
-auc_te = auc(test_results);
+%test_results = test(my_trained_model, Dt);
+%auc_te = auc(test_results);
 
 %roc(test_results);
 
-fprintf('AUROC results for model\n');
+%fprintf('AUROC results for model\n');
 my_trained_model
-fprintf('train=%5.4f\tvalid=%5.4f\ttest=%5.4f\n', auc_tr, auc_va, auc_te);
-fprintf('To show ROC curve type: roc(test_results)\n');
+%fprintf('train=%5.4f\tvalid=%5.4f\ttest=%5.4f\n', auc_tr, auc_va, auc_te);
+%fprintf('To show ROC curve type: roc(test_results)\n');
 
 % Select features
 my_select=s2n;
@@ -78,6 +87,19 @@ auc_va = [];
 sigma_va = [];
 precision = [];
 recall = [];
+
+% Prepare the subplots
+if (mod(length(feat_num),5) == 0)
+    num_rows = length(feat_num)/5;
+else num_rows = floor(length(feat_num)/5 + 1);
+end
+roc_fig = figure;
+for i=1:length(feat_num)
+    h_roc(i)=subplot(num_rows,5,i);
+    %set(h_roc(i), 'XTick', [], 'YTick', []);
+end
+
+% Calculate the values and graphics
 for i=1:length(feat_num)
     fn = feat_num(i);
     fprintf(' ==== Traning on %d features ===\n', fn);
@@ -94,21 +116,36 @@ for i=1:length(feat_num)
     Dv = data(X(:, fidx), Y);
     validation_results = test(my_trained_model, Dv);
     [auc_va(i), sigma_va(i)] = auc(validation_results);
+    h_aux = roc(validation_results);
+    savefig(h_aux, [auroc_by_fs_folder filesep 'auroc_fs_' num2str(fn) '_' dataset_type]);
+    set(h_aux,'Visible','off');
+    tmpaxes=findobj(h_aux,'Type','axes');
+    copyobj(allchild(tmpaxes),h_roc(i));
+    title(h_roc(i),['NUM.FEATS=' num2str(fn) '  AUROC=' num2str(auc_va(i))], 'FontSize', 8);
 end
+savefig(roc_fig, [auroc_by_fs_folder filesep 'all_auroc_fs']);
+close(roc_fig);
 
-% Measure the predictive power with ALC
-% Learning curve and ALC
-ALC = alc(feat_num, auc_va);
-fprintf('+++ Area under the learnign curve ALC = %5.4f +++\n', ALC);
-h=plot_learning_curve('Learning curve', ALC, feat_num, auc_va, sigma_va);
 
+% Measure the predictive power with AULC
+% Learning curve and AULC
+AULC = alc(feat_num, auc_va);
+%fprintf('+++ Area under the learnign curve AULC = %5.4f +++\n', AULC);
+h_aulc=plot_learning_curve('Learning curve', AULC, feat_num, auc_va, sigma_va);
+savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type]);
+close(h_aulc);
 % Measure the discovery power with AUPR
 % Precision-recall curve (we use the same code...)
 AUPR = aupr(recall, precision);
-h=plot_pr_curve('PR curve', AUPR, recall, precision);
+h_aupr=plot_pr_curve('PR curve', AUPR, recall, precision);
+savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type]);
+close(h_aupr);
+
+fprintf('\n ========== END =========\n');
+
 
 % Todo: 
-% Vary the proportion of missing data (percent = 0, 10, 20, 30, 80)
+% Vary the proportion of missing data (percent = 0, 10, 20, 40, 80)
 % Replace missing data by median
 % Compute ALC and AUPR for all proportions of missing data
 
