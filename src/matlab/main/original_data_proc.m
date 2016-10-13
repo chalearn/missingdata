@@ -43,35 +43,35 @@ use_spider_clop;
 %my_classifier=svc({'coef0=1','degree=3','gamma=0','shrinkage=1'});
 
 my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
-my_model=chain({s2n('f_max=1000'),my_classifier}); % feature selection followed by classification
+%my_model=chain({s2n('f_max=1000'),my_classifier}); % feature selection followed by classification
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
-D = data (X, Y);
-[training_results, my_trained_model] = train(my_model, D);
-auc_tr = auc(training_results); % training_results.X = predictions, training_results.Y = targets
+%D = data (X, Y);
+%[training_results, my_trained_model] = train(my_model, D);
+%auc_tr = auc(training_results); % training_results.X = predictions, training_results.Y = targets
 
 % Performance on validation set
-Xv=load([dataset_folder 'gisette_valid.data']);
-Yv=load([dataset_folder 'gisette_valid.labels']);
-Dv = data (Xv, Yv);
-validation_results = test(my_trained_model, Dv);
-auc_va = auc(validation_results);
+%Xv=load([dataset_folder 'gisette_valid.data']);
+%Yv=load([dataset_folder 'gisette_valid.labels']);
+%Dv = data (Xv, Yv);
+%validation_results = test(my_trained_model, Dv);
+%auc_va = auc(validation_results);
 
-h_auroc = roc(validation_results);
-savefig(h_auroc, [auroc_by_fs_folder filesep 'auroc_' dataset_type]);
-set(h_auroc,'Visible','off');
-close(h_auroc);
+%h_auroc = roc(validation_results);
+%savefig(h_auroc, [auroc_by_fs_folder filesep 'auroc_' dataset_type]);
+%set(h_auroc,'Visible','off');
+%close(h_auroc);
 % Performance on test set
-Xt=load([dataset_folder 'gisette_test.data']);
-Yt=load([dataset_folder 'gisette_test.labels']);
-Dt = data (Xt, Yt);
+%Xt=load([dataset_folder 'gisette_test.data']);
+%Yt=load([dataset_folder 'gisette_test.labels']);
+%Dt = data (Xt, Yt);
 %test_results = test(my_trained_model, Dt);
 %auc_te = auc(test_results);
 
 %roc(test_results);
 
 %fprintf('AUROC results for model\n');
-my_trained_model
+%my_trained_model
 %fprintf('train=%5.4f\tvalid=%5.4f\ttest=%5.4f\n', auc_tr, auc_va, auc_te);
 %fprintf('To show ROC curve type: roc(test_results)\n');
 
@@ -112,7 +112,7 @@ for i=1:length(feat_num)
     recall(i) = TP/Npos; 
     % Success of prediction
     D = data(X(:, fidx) , Y);
-    [training_results, my_trained_model] = train(my_model, D);
+    [training_results, my_trained_model] = train(my_classifier, D);
     Dv = data(X(:, fidx), Y);
     validation_results = test(my_trained_model, Dv);
     [auc_va(i), sigma_va(i)] = auc(validation_results);
@@ -143,6 +143,7 @@ close(h_aupr);
 
 fprintf('\n ========== END =========\n');
 
+%save([resultsdir filesep dataset_name '_' dataset_type])
 
 % Todo: 
 % Vary the proportion of missing data (percent = 0, 10, 20, 40, 80)
