@@ -46,14 +46,14 @@ my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
 %my_model=chain({s2n('f_max=1000'),my_classifier}); % feature selection followed by classification
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
-%D = data (X, Y);
+D = data (X, Y);
 %[training_results, my_trained_model] = train(my_model, D);
 %auc_tr = auc(training_results); % training_results.X = predictions, training_results.Y = targets
 
 % Performance on validation set
-%Xv=load([dataset_folder 'gisette_valid.data']);
-%Yv=load([dataset_folder 'gisette_valid.labels']);
-%Dv = data (Xv, Yv);
+Xv=load([dataset_folder 'gisette_valid.data']);
+Yv=load([dataset_folder 'gisette_valid.labels']);
+Dv = data (Xv, Yv);
 %validation_results = test(my_trained_model, Dv);
 %auc_va = auc(validation_results);
 
@@ -77,7 +77,7 @@ my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
 
 % Select features
 my_select=s2n;
-[Ds, selected_features] = train(my_select, Dt);
+[Ds, selected_features] = train(my_select, D);
 N = length(T); % Total number of features
 Npos = length(find(T==1));
 nmax = floor(log2(N));
