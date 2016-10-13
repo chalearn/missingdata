@@ -121,7 +121,7 @@ for i=1:length(feat_num)
     set(h_aux,'Visible','off');
     tmpaxes=findobj(h_aux,'Type','axes');
     copyobj(allchild(tmpaxes),h_roc(i));
-    title(h_roc(i),['NUM.FEATS=' num2str(fn) '  AUROC=' num2str(auc_va(i))], 'FontSize', 8);
+    title(h_roc(i),['FEATS=' num2str(fn) '  AUROC=' num2str(auc_va(i))], 'FontSize', 7);
 end
 savefig(roc_fig, [auroc_by_fs_folder filesep 'all_auroc_fs']);
 close(roc_fig);
