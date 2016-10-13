@@ -100,9 +100,9 @@ for i=1:length(feat_num)
     precision(i) = TP/fn; 
     recall(i) = TP/Npos; 
     % Success of prediction
-    Df = data(D.X(:, fidx) , D.Y);
+    Df = data(X(:, fidx) , Y);
     [training_results, my_trained_model] = train(my_classifier, Df);
-    Dfv = data(Dv.X(:, fidx), Dv.Y);
+    Dfv = data(X(:, fidx), Y);
     validation_results = test(my_trained_model, Dfv);
     [auc_va(i), sigma_va(i)] = auc(validation_results);
     h_aux = roc(validation_results);
