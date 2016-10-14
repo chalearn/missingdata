@@ -7,18 +7,25 @@
 %1) no probes = Gisette_noprobe
 %2) with probes (original) = Gisette
 
+% Set the dataset name.
+dataset_name = 'Gisette';
+% Set the dataset folder.
+dataset_type = 'orig_dataset';
+
+% Get the different file names of the dataset.
+data_base_name = lower(dataset_name);
+data_train_name = [data_base_name '_train'];
+data_test_name = [data_base_name '_test'];
+data_valid_name = [data_base_name '_valid'];
+data_feat_name = [data_base_name '_feat'];
+
 % Add the utils folder to Matlab path to start the file load process (including libs).
 utils_dir = '../utils';
 addpath(utils_dir);
 % Obtain the dir of each relevant folder in the repository.
 [rootdir datadir graphsdir srcdir resultsdir] = load_path();
-
-% Set the dataset name.
-dataset_name = 'Gisette';
-% Set the dataset folder.
-dataset_type = ['orig_dataset'];
+% Obtain the dataset folder.
 dataset_folder = [datadir filesep dataset_type filesep dataset_name];
-
 % Create a folder to save the different graphs of the dataset.
 graphs_folder = [graphsdir filesep dataset_name];
 mkdir(graphs_folder);
@@ -27,8 +34,9 @@ mkdir(graphs_folder);
 auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type];
 mkdir(auroc_by_fs_folder);
 
-[Df Dt Dfv F T] = load_dataset(dataset_folder, 'gisette_train', 'gisette_test', ...
-                             'gisette_valid', 'gisette_feat');
+% Load the dataset, divided in train, test, validation, ...
+[D Dt Dv F T] = load_dataset(dataset_folder, data_train_name, data_test_name, ...
+                             data_valid_name, data_feat_name);
 % Take a look at the digits
 %M=browse_digit(X,Y,F);
 % Note: If you use the plain Gisette_noprobe, do niot load F and use
@@ -39,94 +47,29 @@ mkdir(auroc_by_fs_folder);
 use_spider_clop;
 %my_classifier=svc({'coef0=1','degree=3','gamma=0','shrinkage=1'});
 
-my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
-%my_model=chain({s2n('f_max=1000'),my_classifier}); % feature selection followed by classification
+%my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
-%[training_results, my_trained_model] = train(my_model, D);
-%auc_tr = auc(training_results); % training_results.X = predictions, training_results.Y = targets
+% Feature selection process.
+[rank_list num_feats] = fs_rank( 1, 1, D, Dt, Dv, F, T);
+% Classification with the different feature subsets. 
+[train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
+                    classif(1, D, Dt, Dv, F, T, rank_list);
+% Obtain the different plots for the validation subset.
+[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
+                    get_plot(valid_r, prec_r, recall_r, num_feats);
+% Obtain the different plots for the test subset.
+%[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
+%                    get_plot(test_r, prec_r, recall_r, num_feats);
 
-%validation_results = test(my_trained_model, Dv);
-%auc_va = auc(validation_results);
-
-%h_auroc = roc(validation_results);
-%savefig(h_auroc, [auroc_by_fs_folder filesep 'auroc_' dataset_type]);
-%set(h_auroc,'Visible','off');
-%close(h_auroc);
-
-%test_results = test(my_trained_model, Dt);
-%auc_te = auc(test_results);
-
-%roc(test_results);
-
-%fprintf('AUROC results for model\n');
-%my_trained_model
-%fprintf('train=%5.4f\tvalid=%5.4f\ttest=%5.4f\n', auc_tr, auc_va, auc_te);
-%fprintf('To show ROC curve type: roc(test_results)\n');
-
-% Select features
-my_select=s2n;
-[Ds, selected_features] = train(my_select, Df);
-N = length(T); % Total number of features
-Npos = length(find(T==1));
-nmax = floor(log2(N));
-feat_num = 2.^[0: nmax];
-if nmax~=N, feat_num = [feat_num N]; end
-auc_va = [];
-sigma_va = [];
-precision = [];
-recall = [];
-
-% Prepare the subplots
-if (mod(length(feat_num),5) == 0)
-    num_rows = length(feat_num)/5;
-else num_rows = floor(length(feat_num)/5 + 1);
+for i=1:length(cell_h_auroc)
+    savefig(cell_h_auroc{i}, ...
+            [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type]);
 end
-roc_fig = figure;
-for i=1:length(feat_num)
-    h_roc(i)=subplot(num_rows,5,i);
-    %set(h_roc(i), 'XTick', [], 'YTick', []);
-end
-
-% Calculate the values and graphics
-for i=1:length(feat_num)
-    fn = feat_num(i);
-    fprintf(' ==== Traning on %d features ===\n', fn);
-    % Indices of selected features
-    fidx = selected_features.fidx(1:fn);
-    % Fraction of "probes"; precision = fraction of the retrieved that are relevant;
-    % recall = fraction of the relevant that are retrieved
-    TP = sum(T(fidx)==1);
-    precision(i) = TP/fn; 
-    recall(i) = TP/Npos; 
-    % Success of prediction
-    Df = data(D.X(:, fidx) , D.Y);
-    [training_results, my_trained_model] = train(my_classifier, Df);
-    Dfv = data(Dv.X(:, fidx), Dv.Y);
-    validation_results = test(my_trained_model, Dfv);
-    [auc_va(i), sigma_va(i)] = auc(validation_results);
-    h_aux = roc(validation_results);
-    savefig(h_aux, [auroc_by_fs_folder filesep 'auroc_fs_' num2str(fn) '_' dataset_type]);
-    set(h_aux,'Visible','off');
-    tmpaxes=findobj(h_aux,'Type','axes');
-    copyobj(allchild(tmpaxes),h_roc(i));
-    title(h_roc(i),['FEATS=' num2str(fn) '  AUROC=' num2str(auc_va(i))], 'FontSize', 7);
-end
-savefig(roc_fig, [auroc_by_fs_folder filesep 'all_auroc_fs']);
-close(roc_fig);
-
-
-% Measure the predictive power with AULC
-% Learning curve and AULC
-AULC = alc(feat_num, auc_va);
-%fprintf('+++ Area under the learnign curve AULC = %5.4f +++\n', AULC);
-h_aulc=plot_learning_curve('Learning curve', AULC, feat_num, auc_va, sigma_va);
+savefig(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs']);
+close(h_total_auroc);
 savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type]);
 close(h_aulc);
-% Measure the discovery power with AUPR
-% Precision-recall curve (we use the same code...)
-AUPR = aupr(recall, precision);
-h_aupr=plot_pr_curve('PR curve', AUPR, recall, precision);
 savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type]);
 close(h_aupr);
 
