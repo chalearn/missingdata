@@ -23,7 +23,7 @@ end
 % Ordered all the features of the dataset.
 [~, selected_features] = train(my_fs_method, D);
 
-fid = cell(1,length(num_feats))
+fid = cell(1,length(num_feats));
 % Calculate the values and graphics
 for i=1:length(num_feats)
     aux_fn = num_feats(i);

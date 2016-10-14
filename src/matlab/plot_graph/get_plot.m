@@ -1,4 +1,4 @@
-function [ cell_h_auroc, h_total_auroc, h_aulc, h_aupr ] = ...
+function [ cell_h_auroc, h_axes_auroc, h_aulc, h_aupr ] = ...
                             get_plot( test_r, prec_r, recall_r, num_feats )
 %GET_PLOT Summary of this function goes here
 %   Detailed explanation goes here
@@ -17,9 +17,9 @@ function [ cell_h_auroc, h_total_auroc, h_aulc, h_aupr ] = ...
         auc_va = zeros(1,num_plots);
         sigma_va = zeros(1,num_plots);
     
-        h_total_auroc = figure;
+        h_axes_auroc = figure;
         for i=1:num_plots
-            h_total_auroc(i)=subplot(num_rows,5,i);
+            h_axes_auroc(i)=subplot(num_rows,5,i);
             %set(h_roc(i), 'XTick', [], 'YTick', []);
         end
         for i=1:num_plots
@@ -28,8 +28,8 @@ function [ cell_h_auroc, h_total_auroc, h_aulc, h_aupr ] = ...
             %savefig(h_aux, [auroc_by_fs_folder filesep 'auroc_fs_' num2str(fn) '_' dataset_type]);
             set(cell_h_auroc{i},'Visible','off');
             tmpaxes=findobj(cell_h_auroc{i},'Type','axes');
-            copyobj(allchild(tmpaxes),h_total_auroc(i));
-            title(h_total_auroc(i),['FEATS=' num2str(num_feats) '  AUROC=' num2str(auc_va(i))], 'FontSize', 7);
+            copyobj(allchild(tmpaxes),h_axes_auroc(i));
+            title(h_axes_auroc(i),['FEATS=' num2str(num_feats(i)) '  AUROC=' num2str(auc_va(i))], 'FontSize', 7);
         end
     end
     
