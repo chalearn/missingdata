@@ -29,6 +29,9 @@ dataset_folder = [datadir filesep dataset_type filesep dataset_name];
 % Create a folder to save the different graphs of the dataset.
 graphs_folder = [graphsdir filesep dataset_name];
 mkdir(graphs_folder);
+% Create a folder to save the info of the dataset.
+results_folder = [datadir filesep dataset_name];
+mkdir(results_folder);
 % Create a folder to save the different aurocs for each features selected
 % by feature selection methods. 
 auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type];
@@ -56,7 +59,7 @@ use_spider_clop;
 [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
                     classif(1, D, Dt, Dv, F, T, rank_list);
 % Obtain the different plots for the validation subset.
-[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
+[cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc, aulc, aupr] = ...
                     get_plot(valid_r, prec_r, recall_r, num_feats);
 % Obtain the different plots for the test subset.
 %[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
@@ -73,9 +76,11 @@ close(h_aulc);
 savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type]);
 close(h_aupr);
 
-fprintf('\n ========== END =========\n');
+save([results_folder filesep 'data_' dataset_type], 'rank_list', 'num_feats', ...
+     'train_r', 'valid_r', 'test_r', 'train_mod', 'prec_r', 'recall_r', ...
+     'auroc', 'aulc', 'aupr')
 
-%save([resultsdir filesep dataset_name '_' dataset_type])
+fprintf('\n ========== END =========\n');
 
 % Todo: 
 % Vary the proportion of missing data (percent = 0, 10, 20, 40, 80)
