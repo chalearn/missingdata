@@ -12,6 +12,8 @@ dataset_name = 'Gisette';
 % Set the dataset folder.
 dataset_type = 'orig_dataset';
 
+mcar_p = [0, 10, 20, 40, 80];
+
 % Get the different file names of the dataset.
 data_base_name = lower(dataset_name);
 data_train_name = [data_base_name '_train'];
@@ -53,11 +55,14 @@ use_spider_clop;
 %my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
+% Apply MCAR missing data on the dataset.
+[D_mcar Dt_mcar Dv_mcar] = mcar(1, mcar_p, D, Dt, Dv);
+
 % Feature selection process.
-[rank_list num_feats] = fs_rank( 1, 1, D, Dt, Dv, F, T);
+[rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar, F, T);
 % Classification with the different feature subsets. 
 [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
-                    classif(1, D, Dt, Dv, F, T, rank_list);
+                    classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
 % Obtain the different plots for the validation subset.
 [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc, aulc, aupr] = ...
                     get_plot(valid_r, prec_r, recall_r, num_feats);
