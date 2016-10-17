@@ -10,6 +10,8 @@
 % Set the dataset name.
 dataset_name = 'Gisette';
 % Set the dataset folder.
+dataset_orig_type = 'orig_dataset';
+% Set the dataset folder.
 dataset_type = 'miss_dataset';
 
 mcar_p = [0, 0.1, 0.2, 0.4, 0.8];
@@ -27,7 +29,7 @@ addpath(utils_dir);
 % Obtain the dir of each relevant folder in the repository.
 [rootdir datadir graphsdir srcdir resultsdir] = load_path();
 % Obtain the dataset folder.
-dataset_folder = [datadir filesep dataset_type filesep dataset_name];
+dataset_folder = [datadir filesep dataset_orig_type filesep dataset_name];
 % Create a folder to save the different graphs of the dataset.
 graphs_folder = [graphsdir filesep dataset_name];
 mkdir(graphs_folder);
@@ -57,7 +59,9 @@ for p=1:length(mcar_p)
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type '_' num2str(mcar_p(p))];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
-    [D_mcar Dt_mcar Dv_mcar] = mcar(1, mcar_p(p), D, Dt, Dv);
+    [M_mcar Mt_mcar Mv_mcar] = mcar(1, mcar_p(p), D, Dt, Dv);
+    % Apply an imputation over the missing data values.
+    [D_mcar Dt_mcar Dv_mcar] = imputation(1, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
 
     % Feature selection process.
     [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar, F, T);
@@ -87,9 +91,9 @@ for p=1:length(mcar_p)
     close(h_aupr);
 
     save([results_folder filesep 'data_' dataset_type '_' num2str(mcar_p(p))], ...
-         'D_mcar', 'Dt_mcar', 'Dv_mcar', 'rank_list', 'num_feats', 'train_r', ...
-         'valid_r', 'test_r', 'train_mod', 'prec_r', 'recall_r', 'auroc', ...
-         'aulc', 'aupr')
+         'D_mcar', 'Dt_mcar', 'Dv_mcar', 'M_mcar', 'Mt_mcar', 'Mv_mcar', ...
+         'rank_list', 'num_feats', 'train_r', 'valid_r', 'test_r', ...
+         'train_mod', 'prec_r', 'recall_r', 'auroc', 'aulc', 'aupr')
 end
 
 fprintf('\n ========== END =========\n');
