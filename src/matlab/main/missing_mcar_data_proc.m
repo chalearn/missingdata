@@ -14,7 +14,7 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss_dataset';
 
-mcar_p = [0, 0.1, 0.2, 0.4, 0.8];
+mcar_p = [0.1, 0.2, 0.4, 0.8];
 
 % Get the different file names of the dataset.
 data_base_name = lower(dataset_name);
@@ -77,17 +77,13 @@ for p=1:length(mcar_p)
 
     for i=1:length(cell_h_auroc)
         savefig(cell_h_auroc{i}, ...
-                [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) 
-                '_' dataset_type '_' num2str(mcar_p(p))]);
+                [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type '_' num2str(mcar_p(p)*100)]);
     end
-    saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_'
-                          dataset_type '_' num2str(mcar_p(p))],'fig');
+    %saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_' dataset_type '_' num2str(mcar_p(p))],'fig');
     %close(h_total_auroc);
-    savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' 
-                    dataset_type '_' num2str(mcar_p(p))]);
+    savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type '_' num2str(mcar_p(p))]);
     close(h_aulc);
-    savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' 
-                    dataset_type '_' num2str(mcar_p(p))]);
+    savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type '_' num2str(mcar_p(p))]);
     close(h_aupr);
 
     save([results_folder filesep 'data_' dataset_type '_' num2str(mcar_p(p))], ...
