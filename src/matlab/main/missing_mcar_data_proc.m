@@ -10,9 +10,9 @@
 % Set the dataset name.
 dataset_name = 'Gisette';
 % Set the dataset folder.
-dataset_type = 'orig_dataset';
+dataset_type = 'miss_dataset';
 
-mcar_p = [0, 10, 20, 40, 80];
+mcar_p = [0, 0.1, 0.2, 0.4, 0.8];
 
 % Get the different file names of the dataset.
 data_base_name = lower(dataset_name);
@@ -34,10 +34,6 @@ mkdir(graphs_folder);
 % Create a folder to save the info of the dataset.
 results_folder = [resultsdir filesep dataset_name];
 mkdir(results_folder);
-% Create a folder to save the different aurocs for each features selected
-% by feature selection methods. 
-auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type];
-mkdir(auroc_by_fs_folder);
 
 % Load the dataset, divided in train, test, validation, ...
 [D Dt Dv F T] = load_dataset(dataset_folder, data_train_name, data_test_name, ...
@@ -55,35 +51,46 @@ use_spider_clop;
 %my_classifier=kridge; % Other possible models, e.g. my_classifier=naive;
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
-% Apply MCAR missing data on the dataset.
-[D_mcar Dt_mcar Dv_mcar] = mcar(1, mcar_p, D, Dt, Dv);
+for p=1:length(mcar_p)
+    % Create a folder to save the different aurocs for each features selected
+    % by feature selection methods. 
+    auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type '_' num2str(mcar_p(p))];
+    mkdir(auroc_by_fs_folder);
+    % Apply MCAR missing data on the dataset.
+    [D_mcar Dt_mcar Dv_mcar] = mcar(1, mcar_p(p), D, Dt, Dv);
 
-% Feature selection process.
-[rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar, F, T);
-% Classification with the different feature subsets. 
-[train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
-                    classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
-% Obtain the different plots for the validation subset.
-[cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc, aulc, aupr] = ...
-                    get_plot(valid_r, prec_r, recall_r, num_feats);
-% Obtain the different plots for the test subset.
-%[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
-%                    get_plot(test_r, prec_r, recall_r, num_feats);
+    % Feature selection process.
+    [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar, F, T);
+    % Classification with the different feature subsets. 
+    [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
+                        classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
+    % Obtain the different plots for the validation subset.
+    [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc, aulc, aupr] = ...
+                        get_plot(valid_r, prec_r, recall_r, num_feats);
+    % Obtain the different plots for the test subset.
+    %[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
+    %                    get_plot(test_r, prec_r, recall_r, num_feats);
 
-for i=1:length(cell_h_auroc)
-    savefig(cell_h_auroc{i}, ...
-            [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type]);
+    for i=1:length(cell_h_auroc)
+        savefig(cell_h_auroc{i}, ...
+                [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) 
+                '_' dataset_type '_' num2str(mcar_p(p))]);
+    end
+    saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_'
+                          dataset_type '_' num2str(mcar_p(p))],'fig');
+    %close(h_total_auroc);
+    savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' 
+                    dataset_type '_' num2str(mcar_p(p))]);
+    close(h_aulc);
+    savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' 
+                    dataset_type '_' num2str(mcar_p(p))]);
+    close(h_aupr);
+
+    save([results_folder filesep 'data_' dataset_type '_' num2str(mcar_p(p))], ...
+         'D_mcar', 'Dt_mcar', 'Dv_mcar', 'rank_list', 'num_feats', 'train_r', ...
+         'valid_r', 'test_r', 'train_mod', 'prec_r', 'recall_r', 'auroc', ...
+         'aulc', 'aupr')
 end
-saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs'],'fig');
-%close(h_total_auroc);
-savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type]);
-close(h_aulc);
-savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type]);
-close(h_aupr);
-
-save([results_folder filesep 'data_' dataset_type], 'rank_list', 'num_feats', ...
-     'train_r', 'valid_r', 'test_r', 'train_mod', 'prec_r', 'recall_r', ...
-     'auroc', 'aulc', 'aupr')
 
 fprintf('\n ========== END =========\n');
 
