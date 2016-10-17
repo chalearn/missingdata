@@ -69,7 +69,7 @@ for i=1:length(cell_h_auroc)
     savefig(cell_h_auroc{i}, ...
             [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type]);
 end
-saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs'],'fig');
+saveas(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_' dataset_type],'fig');
 %close(h_total_auroc);
 savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type]);
 close(h_aulc);
