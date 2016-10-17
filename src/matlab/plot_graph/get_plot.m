@@ -1,4 +1,4 @@
-function [ cell_h_auroc, h_axes_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
+function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
                             get_plot( test_r, prec_r, recall_r, num_feats )
 %GET_PLOT Summary of this function goes here
 %   Detailed explanation goes here
@@ -17,7 +17,7 @@ function [ cell_h_auroc, h_axes_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ..
         auc_va = zeros(1,num_plots);
         sigma_va = zeros(1,num_plots);
     
-        h_axes_auroc = figure;
+        h_auroc = figure;
         for i=1:num_plots
             h_axes_auroc(i)=subplot(num_rows,5,i);
             %set(h_roc(i), 'XTick', [], 'YTick', []);
