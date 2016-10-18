@@ -93,7 +93,7 @@ for p=1:length(mcar_p)
          'train_mod', 'prec_r', 'recall_r', 'auroc', 'aulc', 'aupr', 'miss_perc');
 end
 
-h_miss_evol = get_miss_evolution_plot(results_folder, dataset_type, miss_perc);
+%h_miss_evol = get_miss_evolution_plot(results_folder, dataset_type, miss_perc);
 
 fprintf('\n ========== END =========\n');
 
