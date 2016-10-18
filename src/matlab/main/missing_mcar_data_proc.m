@@ -57,7 +57,7 @@ for p=1:length(mcar_p)
     miss_perc = mcar_p(p);
     % Create a folder to save the different aurocs for each features selected
     % by feature selection methods. 
-    auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type '_' num2str(mcar_p(p)*100)];
+    auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type '_' num2str(miss_perc)];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
     [M_mcar Mt_mcar Mv_mcar] = mcar(1, miss_perc, D, Dt, Dv);
@@ -94,7 +94,9 @@ for p=1:length(mcar_p)
 end
 
 %h_miss_evol = get_miss_evolution_plot(results_folder, dataset_type, miss_perc);
-
+%savefig(h_miss_evol, [graphsdir filesep dataset_name filesep 'miss_evolution_' dataset_type]);
+%close(h_miss_evol);
+    
 fprintf('\n ========== END =========\n');
 
 % Todo: 
