@@ -14,7 +14,7 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss_dataset';
 
-mcar_p = [0, 0.1, 0.2, 0.4, 0.8];
+mcar_p = [0, 10, 20, 40, 80];
 
 % Get the different file names of the dataset.
 data_base_name = lower(dataset_name);
@@ -54,12 +54,13 @@ use_spider_clop;
 % Slightly better with normalization, but don't bother: my_model=chain({normalize, s2n('f_max=1000'),my_classifier});
 
 for p=1:length(mcar_p)
+    miss_perc = mcar_p(p);
     % Create a folder to save the different aurocs for each features selected
     % by feature selection methods. 
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_by_fs_' dataset_type '_' num2str(mcar_p(p)*100)];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
-    [M_mcar Mt_mcar Mv_mcar] = mcar(1, mcar_p(p), D, Dt, Dv);
+    [M_mcar Mt_mcar Mv_mcar] = mcar(1, miss_perc, D, Dt, Dv);
     % Apply an imputation over the missing data values.
     [D_mcar Dt_mcar Dv_mcar] = imputation(1, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
 
@@ -77,20 +78,22 @@ for p=1:length(mcar_p)
 
     for i=1:length(cell_h_auroc)
         savefig(cell_h_auroc{i}, ...
-                [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type '_' num2str(mcar_p(p)*100)]);
+                [auroc_by_fs_folder filesep 'auroc_fs_' num2str(num_feats(i)) '_' dataset_type '_' num2str(miss_perc)]);
     end
-    savefig(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_' dataset_type '_' num2str(mcar_p(p)*100) '.fig']);
+    savefig(h_total_auroc, [auroc_by_fs_folder filesep 'all_auroc_fs_' dataset_type '_' num2str(miss_perc) '.fig']);
     close(h_total_auroc);
-    savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type '_' num2str(mcar_p(p)*100)]);
+    savefig(h_aulc, [graphsdir filesep dataset_name filesep 'aulc_' dataset_type '_' num2str(miss_perc)]);
     close(h_aulc);
-    savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type '_' num2str(mcar_p(p)*100)]);
+    savefig(h_aupr, [graphsdir filesep dataset_name filesep 'aupr_' dataset_type '_' num2str(miss_perc)]);
     close(h_aupr);
 
     save([results_folder filesep 'data_' dataset_type '_' num2str(mcar_p(p)*100) '.mat'], ...
          'D_mcar', 'Dt_mcar', 'Dv_mcar', 'M_mcar', 'Mt_mcar', 'Mv_mcar', ...
          'rank_list', 'num_feats', 'train_r', 'valid_r', 'test_r', ...
-         'train_mod', 'prec_r', 'recall_r', 'auroc', 'aulc', 'aupr')
+         'train_mod', 'prec_r', 'recall_r', 'auroc', 'aulc', 'aupr', 'miss_perc');
 end
+
+h_miss_evol = get_miss_evolution_plot(results_folder, dataset_type, miss_perc);
 
 fprintf('\n ========== END =========\n');
 
