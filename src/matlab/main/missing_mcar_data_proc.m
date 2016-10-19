@@ -42,10 +42,10 @@ mkdir(aulc_folder);
 aupr_folder = [graphs_folder filesep 'aupr_' dataset_type];
 mkdir(aupr_folder);
 % Create a folder to save the info of the dataset.
-aux_folder = [resultsdir filesep dataset_name];
-mkdir(aux_folder);
-results_folder = [aux_folder filesep imput_method];
+results_folder = [resultsdir filesep dataset_name];
 mkdir(results_folder);
+imputation_folder = [results_folder filesep imput_method];
+mkdir(imputation_folder);
 
 % Load the dataset, divided in train, test, validation, ...
 [D Dt Dv F T] = load_dataset(dataset_folder, data_train_name, data_test_name, ...
@@ -80,7 +80,7 @@ for p=1:length(mcar_p)
     [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
                         classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
     % Obtain the different plots for the validation subset.
-    [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc, aulc, aupr] = ...
+    [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
                         get_plot(valid_r, prec_r, recall_r, num_feats);
     % Obtain the different plots for the test subset.
     %[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
@@ -97,13 +97,13 @@ for p=1:length(mcar_p)
     savefig(h_aupr, [aupr_folder filesep 'aupr_' dataset_type '_' num2str(miss_perc)]);
     close(h_aupr);
 
-    save([results_folder filesep 'data_' dataset_type '_' num2str(miss_perc) '.mat'], ...
+    save([imputation_folder filesep 'data_' dataset_type '_' num2str(miss_perc) '.mat'], ...
          'D_mcar', 'Dt_mcar', 'Dv_mcar', 'M_mcar', 'Mt_mcar', 'Mv_mcar', ...
          'rank_list', 'num_feats', 'train_r', 'valid_r', 'test_r', ...
-         'train_mod', 'prec_r', 'recall_r', 'auroc', 'aulc', 'aupr', 'miss_perc');
+         'train_mod', 'prec_r', 'recall_r', 'auroc_v', 'aulc_v', 'aupr_v', 'miss_perc');
 end
 
-%h_miss_evol = get_miss_evolution_plot(results_folder, miss_perc);
+%h_miss_evol = get_miss_evolution_plot(results_folder);
 %savefig(h_miss_evol, [graphsdir filesep dataset_name filesep 'miss_evolution_' dataset_type]);
 %close(h_miss_evol);
     
