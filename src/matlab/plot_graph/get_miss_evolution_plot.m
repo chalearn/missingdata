@@ -1,4 +1,4 @@
-function [ h_miss_evol ] = get_miss_evolution_plot( dataset_folder, dataset_type,  )
+function [ h_miss_evol ] = get_miss_evolution_plot(dataset_folder)
 %GET_MISS_EVOLUTION_PLOT Summary of this function goes here
 %   Detailed explanation goes here
     s_list = [];
