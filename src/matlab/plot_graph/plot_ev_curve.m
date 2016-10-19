@@ -19,17 +19,13 @@ else
 end
 hold on
 
-rand_predict=0.5;
+rand_predict=0;
 
-x=log2(x);
-last_point=x(end);
+last_point=100;
 final_score=y(end);
 
 % Show the area under the curve
 patch([x last_point 0 0], [y rand_predict rand_predict y(1)], [1 0.9 0.6]);
-
-% Plot the curve with error bars
-errorbar(x, y, e, 'r', 'LineWidth', 2);
 
 plot(x, y, 'ro', 'MarkerSize', 8, 'MarkerFaceColor', 'r');
 plot([0 last_point], [1 1]);
@@ -39,15 +35,15 @@ plot([0 0], [rand_predict 1]);
 %plot([0 last_point], [rand_predict 1], '-.');
 %plot([last_point last_point+1], [final_score final_score], 'k--');
 %name(name=='_')=' ';
-%tt=[upper(name) ': ALC=' num2str(score, '%5.4f')]; 
-%title(tt);
+tt=[upper(name)];% ': AUEMC=' num2str(score, '%5.4f')]; 
+title(tt);
 %text(last_point+1, final_score, num2str(final_score, '-%5.4f\n'));
-text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
-xlabel('Discovery Power');
-ylabel('Predictive Power');
+%text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
+xlabel('% of missing values');
+ylabel('PP/DP');
 xl=xlim; yl=ylim;
 xlim([0 last_point]);
-ylim([0.5 1]);
+ylim([0 1]);
 
 
 

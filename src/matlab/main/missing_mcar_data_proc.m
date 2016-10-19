@@ -103,11 +103,8 @@ for p=1:length(mcar_p)
          'train_mod', 'prec_r', 'recall_r', 'auroc_v', 'aulc_v', 'aupr_v', 'miss_perc');
 end
 
-%h_miss_evol = get_miss_evolution_plot(results_folder);
-%savefig(h_miss_evol, [graphsdir filesep dataset_name filesep 'miss_evolution_' dataset_type]);
-%close(h_miss_evol);
+h_miss_evol = get_miss_evolution_plot(results_folder);
+savefig(h_miss_evol, [graphsdir filesep dataset_name filesep 'miss_evolution']);
+close(h_miss_evol);
     
 fprintf('\n ========== END =========\n');
-
-% Todo: 
-% Compute ALC and AUPR for all proportions of missing data
