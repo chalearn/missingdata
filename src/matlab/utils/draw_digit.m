@@ -29,7 +29,7 @@ p=-1;
 e=0;
 % Obtain the missing matrix
 D_miss = D;
-D_miss.X = D.X .* M_mcar;
+D_miss.X = D.X .* ~M_mcar;
 
 figure('name', 'Isabelle''s MNIST browser');
 num=0;

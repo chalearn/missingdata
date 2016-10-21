@@ -8,23 +8,21 @@ ld=length(v);
 nd=sqrt(ld);
 im=255-reshape(v,nd,nd)';
 num=256;
-if (nargin==1)
-    map=gray(num);
-end
+map=gray(num);
+imn = inormalize(im);
+
 if (nargin>1)
     imiss=reshape(miss,nd,nd)';
-    map=gray(num-1);
-    map=[1 0.5 0; map];
+    imn(imiss==1)=1;
 end
 
-imn = inormalize(im);
-%im=6.25*(0.16-reshape(v,nd,nd))';
-%imn=im;
-if (nargin>1)
-    imn(imiss==0)=-1;
-end
 imn = uint8(imn*(num-1));
 colormap(map);
 image(imn); 
-freezeColors
+if (nargin>1)
+    hold on
+    [x_miss y_miss] = find(imiss);
+    plot(y_miss, x_miss, 'r.','MarkerSize', 30);
+    hold off
+end
 warning on
