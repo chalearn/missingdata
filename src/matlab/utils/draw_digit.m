@@ -51,11 +51,14 @@ while 1
         M1(feat_idx)=D.X(num,feat_loc);
         M2=zeros(1,28*28);
         M2(feat_idx)=D_miss.X(num,feat_loc);
+        MM2=zeros(1,28*28);
+        MM2(feat_idx)=M_mcar(num,feat_loc);
         M3=zeros(1,28*28);
         M3(feat_idx)=D_mcar.X(num,feat_loc);
     else
         M1=D.X(num,:);
         M2=D_miss(num,:);
+        MM2=M_mcar(num,:);
         M3=D_mcar.X(num,:);
     end
     title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(num,1))], 'FontSize', 16);
@@ -63,7 +66,7 @@ while 1
     show_digit(M1);
     title('Original');
     subplot(1,3,2);
-    show_digit(M2);
+    show_digit(M2,MM2);
     title('Missing');
     subplot(1,3,3);
     show_digit(M3);
