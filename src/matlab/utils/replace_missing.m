@@ -37,8 +37,10 @@ switch method
         X(missing)=0;
         for k=1:maxiter
             [U, S, V] = svds(X, snum);
-            XX = U*S*V;
+            XX = U*S*V';
             X(missing) = XX(missing);
+            X(X<0)=0;
+            X(X>999)=999;
         end
     otherwise
         disp 'No such type';

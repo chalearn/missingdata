@@ -37,6 +37,12 @@ function [D_mcar Dt_mcar Dv_mcar] = imputation(imp_method, D, Dt, Dv, M_mcar, Mt
                 X_mcar(M_mcar) = XX(M_mcar);
                 Xt_mcar(Mt_mcar) = XXt(Mt_mcar);
                 Xv_mcar(Mv_mcar) = XXv(Mv_mcar);
+                X_mcar(X_mcar<0)=0;
+                X_mcar(X_mcar>999)=999;
+                Xt_mcar(Xt_mcar<0)=0;
+                Xt_mcar(Xt_mcar>999)=999;
+                Xv_mcar(Xv_mcar<0)=0;
+                Xv_mcar(Xv_mcar>999)=999;
             end
             D_mcar.X = X_mcar;
             Dt_mcar.X = Xt_mcar;
