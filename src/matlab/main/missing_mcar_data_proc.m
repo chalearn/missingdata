@@ -8,13 +8,14 @@
 %2) with probes (original) = Gisette
 
 % Set the dataset name.
-dataset_name = 'Gisette_noprobe';
+dataset_name = 'Gisette';
 % Set the dataset folder.
 dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss';
 % Imputation method
 imput_method = 'imput_by_median';
+imput = 'median';
 
 mcar_p = [0, 10, 20, 40, 80];
 
@@ -70,9 +71,12 @@ for p=1:length(mcar_p)
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_' dataset_type '_' num2str(miss_perc)];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
-    [M_mcar Mt_mcar Mv_mcar] = mcar(1, miss_perc, D, Dt, Dv);
+    [M_mcar Mt_mcar Mv_mcar] = mcar('flipcoin', miss_perc, D, Dt, Dv);
     % Apply an imputation over the missing data values.
-    [D_mcar Dt_mcar Dv_mcar] = imputation(1, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
+    [D_mcar Dt_mcar Dv_mcar] = imputation(imput, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
+    
+    % See the picture of numbers (original / missing / imputation)
+    %M=draw_digit(D, M_mcar, D_mcar);
 
     % Feature selection process.
     [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar);
