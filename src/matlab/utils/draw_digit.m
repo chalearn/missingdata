@@ -58,7 +58,7 @@ while 1
         M2=D_miss(num,:);
         M3=D_mcar.X(num,:);
     end
-    title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(1,num))], 'FontSize', 16);
+    title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(num,1))], 'FontSize', 16);
     subplot(1,3,1);
     show_digit(M1);
     title('Original');
