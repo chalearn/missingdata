@@ -8,7 +8,7 @@
 %2) with probes (original) = Gisette
 
 % Set the dataset name.
-dataset_name = 'Gisette';
+dataset_name = 'Gisette_noprobe';
 % Set the dataset folder.
 dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
@@ -75,7 +75,7 @@ for p=1:length(mcar_p)
     [D_mcar Dt_mcar Dv_mcar] = imputation(1, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
 
     % Feature selection process.
-    [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar, F, T);
+    [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar);
     % Classification with the different feature subsets. 
     [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
                         classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);

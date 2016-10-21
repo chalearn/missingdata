@@ -3,6 +3,9 @@ function [ D Dt Dv F T ] = load_dataset( folder_data_root, f_train_name, ...
 %LOAD_TRAIN_VALID_TEST Summary of this function goes here
 %   Detailed explanation goes here
 
+F = [];
+T = [];
+
 if nargin >= 2
     X=load([folder_data_root filesep f_train_name '.data']);
     Y=load([folder_data_root filesep f_train_name '.labels']);

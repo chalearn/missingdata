@@ -1,4 +1,4 @@
-function [ fid, num_feats ] = fs_rank( fs_method, th_method, D, Dt, Dv, F, T )
+function [ fid, num_feats ] = fs_rank( fs_method, th_method, D, Dt, Dv)
 %FS_METHOD Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,7 +9,7 @@ switch(fs_method)
     otherwise 
         my_fs_method=s2n;
 end
-N = length(T);
+N = size(D.X,2);
 switch (th_method)
     case 1 % log2 threshold
         nmax = floor(log2(N));
