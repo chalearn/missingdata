@@ -14,7 +14,7 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss';
 % Imputation method
-missingness = 'mar_miss_prod';
+missingness = 'mar_miss_neigh_prod'; %'mar_miss_prod';
 imput = 'svd';
 miss_method = ['miss_by_' missingness];
 imput_method = ['imput_by_' imput];
