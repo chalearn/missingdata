@@ -8,7 +8,7 @@ function [ M_mcar Mt_mcar Mv_mcar ] = mcar( mcar_method, mcar_percent, D, Dt, Dv
     n = size(D.X,2);
 
     switch (mcar_method)
-        case 'flipcoin' % flip_coin
+        case 'mcar_flipcoin' % flip_coin
             total_size = (x+y+z)*n;
             miss_size = round(total_size*(mcar_percent/100));
             rank_v = randperm(total_size);

@@ -14,8 +14,10 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss';
 % Imputation method
-imput_method = 'imput_by_svd';
+missingness = 'mcar_flipcoin';
 imput = 'svd';
+miss_method = ['miss_by_' missingness];
+imput_method = ['imput_by_' imput];
 
 mcar_p = [0, 10, 20, 40, 80];
 
@@ -36,7 +38,9 @@ dataset_folder = [datadir filesep dataset_orig_type filesep dataset_name];
 % Create a folder to save the different graphs of the dataset.
 aux_folder = [graphsdir filesep dataset_name];
 mkdir(aux_folder);
-graphs_folder = [aux_folder filesep imput_method];
+aux_folder2 = [aux_folder filesep miss_method];
+mkdir(aux_folder2);
+graphs_folder = [aux_folder2 filesep imput_method];
 mkdir(graphs_folder);
 aulc_folder = [graphs_folder filesep 'aulc_' dataset_type];
 mkdir(aulc_folder);
@@ -45,7 +49,9 @@ mkdir(aupr_folder);
 % Create a folder to save the info of the dataset.
 results_folder = [resultsdir filesep dataset_name];
 mkdir(results_folder);
-imputation_folder = [results_folder filesep imput_method];
+aux_folder = [results_folder filesep miss_method];
+mkdir(aux_folder);
+imputation_folder = [aux_folder filesep imput_method];
 mkdir(imputation_folder);
 
 % Load the dataset, divided in train, test, validation, ...
@@ -71,7 +77,7 @@ for p=1:length(mcar_p)
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_' dataset_type '_' num2str(miss_perc)];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
-    [M_mcar Mt_mcar Mv_mcar] = mcar('flipcoin', miss_perc, D, Dt, Dv);
+    [M_mcar Mt_mcar Mv_mcar] = mcar(missingness, miss_perc, D, Dt, Dv);
     % Apply an imputation over the missing data values.
     [D_mcar Dt_mcar Dv_mcar] = imputation(imput, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
     
@@ -79,7 +85,7 @@ for p=1:length(mcar_p)
     %M=draw_digit(D, M_mcar, D_mcar);
 
     % Feature selection process.
-    [rank_list num_feats] = fs_rank( 1, 1, D_mcar, Dt_mcar, Dv_mcar);
+    [rank_list num_feats] = fs_rank(1, 1, D_mcar, Dt_mcar, Dv_mcar);
     % Classification with the different feature subsets. 
     [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
                         classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
