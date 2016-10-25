@@ -18,7 +18,8 @@ function [ M_mar Mt_mar Mv_mar ] = mar( mar_method, mar_percent, D, Dt, Dv, F, T
                 v_aux = find(v_feats==0);
                 p_rand = randperm(length(v_aux));
                 j = 1;
-                while (sum(Dmiss(i,:)) < line_miss)
+                while ( (sum(Dmiss(i,:)) < line_miss) && ...
+                        (j <= length(rand_perm)) )
                     Dmiss(i,v_aux(p_rand(j))) = 1;
                     Dmiss(i,v_prods{v_aux(p_rand(j))}) = 1;
                     j=j+1;
