@@ -23,23 +23,23 @@ hold on
 
 rand_predict=0.5;
 % Add a x=100 and y=0 column in the points matrix.
-x = [x ones(size(y,1),1).*100];
+x = [x zeros(size(y,1),1)];
 y = [y zeros(size(y,1),1)];
 for c=1:size(y,1)
-    last_point=x(1,end); %the last x point is the 100% of missing data.
+    last_point=1; %the last x point is the 100% of missing data.
     y_row = y(c,:);
     x_row = x(c,:);
-    plot(x_row, y_row, ['-' color_list(c) 'o'], 'MarkerSize', 8, 'MarkerFaceColor', color_list(c));
-    text(x_row(end-1)+6, y_row(end-1)-0.1, [imput_l(c) ' imput.'], 'Color', color_list(c));
+    plot(y_row, x_row, ['-' color_list(c) 'o'], 'MarkerSize', 8, 'MarkerFaceColor', color_list(c));
+    text(y_row(end-1)-0.1, x_row(end-1)+6, [imput_l(c) ' imput.'], 'Color', color_list(c));
 end
 
 tt=[upper(name)];
 title(tt);
-xlabel('% of missing values');
-ylabel('PP/DP');
-xlim([0 last_point]);
+xlabel('PP');
+ylabel('DP');
+xlim([0.5 last_point]);
 ylim([rand_predict 1]);
-plot([0 last_point], [1 1]);
+plot([0.5 last_point], [1 1]);
 plot([last_point last_point], [rand_predict 1]);
-plot([0 last_point], [rand_predict rand_predict]);
-plot([0 0], [rand_predict 1]);
+plot([0.5 last_point], [rand_predict rand_predict]);
+plot([0.5 0.5], [rand_predict 1]);
