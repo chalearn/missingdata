@@ -14,8 +14,8 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss';
 % Imputation method
-imput_method = 'imput_by_median';
-imput = 'median';
+imput_method = 'imput_by_svd';
+imput = 'svd';
 
 mcar_p = [0, 10, 20, 40, 80];
 
