@@ -35,7 +35,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
     data_feat_name = [dataset_name '_feat'];
 
     % Add the utils folder to Matlab path to start the file load process (including libs).
-    utils_dir = '../utils';
+    utils_dir = ['..' filesep 'utils'];
     addpath(utils_dir);
     % Obtain the dir of each relevant folder in the repository.
     [rootdir datadir graphsdir srcdir resultsdir] = load_path();
@@ -51,12 +51,12 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
     [D Dt Dv F T] = load_dataset(data_orig_folder, data_train_name, data_test_name, ...
                                  data_valid_name, data_feat_name);
 
-    for (t=1:length(missing_type))
+    for t=1:length(missing_type)
         % Create a folder to save the missing type datasets.
         data_miss_type_folder = [data_dest_folder filesep missing_type{t}];
         mkdir(data_miss_type_folder);
         pos_method = find(strcmp(missing_method(:,1),missing_type(t)));
-        for (m=1:length(missing_method{pos_method,2}))
+        for m=1:length(missing_method{pos_method,2})
             data_miss_method_folder = ...
                 [data_miss_type_folder filesep missing_method{pos_method,2}{m}];
             mkdir(data_miss_method_folder);

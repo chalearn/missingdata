@@ -57,11 +57,19 @@ function [ D_miss, Dt_miss, Dv_miss, M_mcar, Mt_mcar, Mv_mcar ] = ...
             M_mar = Dmiss(1:x,:);
             Mv_mar = Dmiss((x+1):(x+y),:);
             Mt_mar = Dmiss((x+y+1):end,:);
-        case 'mar_miss_neigh_prod_corr'
-        case 'mar_miss_top_image'
+        case 'neigh_and_prod_corr'
+        case 'top_image'
     end
     M_mar = logical(M_mar);
     Mt_mar = logical(Mt_mar);
     Mv_mar = logical(Mv_mar);
+    
+    % Get the final samples of the dataset with missing data as NaN values.
+    X(M_mar)=NaN;
+    Xt(Mt_mar)=NaN;
+    Xv(Mv_mar)=NaN;
+    D_miss.X = X;
+    Dt_miss.X = Xt;
+    Dv_miss.X = Xv;
 end
 

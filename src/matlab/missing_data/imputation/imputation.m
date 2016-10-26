@@ -1,52 +1,64 @@
-function [D_mcar Dt_mcar Dv_mcar] = imputation(imp_method, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar)
+function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_miss)
 %IMPUTATION Summary of this function goes here
 %   Detailed explanation goes here
+    
+    % Set initial values to return D struct.
+    D_rest = D_miss;
+    Dt_rest = Dt_miss;
+    Dv_rest = Dv_miss;
+    % Extract the X matrix to work with those data after. 
+    X_miss = D_miss.X;
+    Xt_miss = Dt_miss.X;
+    Xv_miss = Dv_miss.X;
+    % Get the sizes of each data subset.
+    x = size(X_miss,1);
+    y = size(Xt_miss,1);
+    z = size(Xv_miss,1);
+    n = size(X_miss,2);
 
-    X_mcar = D.X;
-    Xt_mcar = Dt.X;
-    Xv_mcar = Dv.X;
-    D_mcar = D;
-    Dt_mcar = Dt;
-    Dv_mcar = Dv;
-    X_median = [];
-    Xt_median = [];
-    Xv_median = [];
     switch(imp_method)
         case 'median' % imputation by median value.
-            for i=1:size(X_mcar,2)
-                X_median = [X_median median(X_mcar(~M_mcar(:,i)))];
-                Xt_median = [Xt_median median(Xt_mcar(~Mt_mcar(:,i)))];
-                Xv_median = [Xv_median median(Xv_mcar(~Mv_mcar(:,i)))];
-            end
-            D_mcar.X = (D_mcar.X .* ~M_mcar) + (M_mcar .* repmat(X_median,size(D_mcar.X,1),1));
-            Dt_mcar.X = (Dt_mcar.X .* ~Mt_mcar) + (Mt_mcar .* repmat(Xt_median,size(Dt_mcar.X,1),1));
-            Dv_mcar.X = (Dv_mcar.X .* ~Mv_mcar) + (Mv_mcar .* repmat(Xv_median,size(Dv_mcar.X,1),1));
+            X_median = nanmedian(X_miss);
+            Xt_median = nanmedian(Xt_miss);
+            Xv_median = nanmedian(Xv_miss);
+            X_median = repmat(X_median,x,1);
+            Xt_median = repmat(Xt_median,y,1);
+            Xv_median = repmat(Xv_median,z,1);
+            miss_pos = isnan(X_miss);
+            X_miss(miss_pos) = X_median(miss_pos);
+            miss_pos = isnan(Xt_miss);
+            Xt_miss(miss_pos) = Xt_median(miss_pos);
+            miss_pos = isnan(Xv_miss);
+            Xv_miss(miss_pos) = Xv_median(miss_pos);
         case 'svd' % imputation by svd
             maxiter = 10;
             maxnum = 10;
-            X_mcar(M_mcar) = 0;
-            Xt_mcar(Mt_mcar) = 0;
-            Xv_mcar(Mv_mcar) = 0;
+            miss = isnan(X_miss);
+            miss_t = isnan(Xt_miss);
+            miss_v = isnan(Xv_miss);
+            X_miss(miss) = 0;
+            Xt_miss(miss_t) = 0;
+            Xv_miss(miss_v) = 0;
             for k=1:maxiter
-                [U, S, V] = svds(X_mcar, maxnum);
-                [Ut, St, Vt] = svds(Xt_mcar, maxnum);
-                [Uv, Sv, Vv] = svds(Xv_mcar, maxnum);
+                [U, S, V] = svds(X_miss, maxnum);
+                [Ut, St, Vt] = svds(Xt_miss, maxnum);
+                [Uv, Sv, Vv] = svds(Xv_miss, maxnum);
                 XX = U*S*V';
                 XXt = Ut*St*Vt';
                 XXv = Uv*Sv*Vv';
-                X_mcar(M_mcar) = XX(M_mcar);
-                Xt_mcar(Mt_mcar) = XXt(Mt_mcar);
-                Xv_mcar(Mv_mcar) = XXv(Mv_mcar);
-                X_mcar(X_mcar<0)=0;
-                X_mcar(X_mcar>999)=999;
-                Xt_mcar(Xt_mcar<0)=0;
-                Xt_mcar(Xt_mcar>999)=999;
-                Xv_mcar(Xv_mcar<0)=0;
-                Xv_mcar(Xv_mcar>999)=999;
+                X_miss(miss) = XX(miss);
+                Xt_miss(miss_t) = XX(miss_t);
+                Xv_miss(miss_v) = XXv(miss_v);
+                X_miss(X_miss<0)=0;
+                X_miss(X_miss>999)=999;
+                Xt_miss(Xt_miss<0)=0;
+                Xt_miss(Xt_miss>999)=999;
+                Xv_miss(Xv_miss<0)=0;
+                Xv_miss(Xv_miss>999)=999;
             end
-            D_mcar.X = X_mcar;
-            Dt_mcar.X = Xt_mcar;
-            Dv_mcar.X = Xv_mcar;
     end
+    D_rest.X = X_miss;
+    Dt_rest.X = Xt_miss;
+    Dv_rest.X = Xv_miss;
 end
 
