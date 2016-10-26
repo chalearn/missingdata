@@ -19,7 +19,7 @@ imput = 'svd';
 miss_method = ['miss_by_' missingness];
 imput_method = ['imput_by_' imput];
 
-mar_p = [0, 10, 20, 40, 80];
+mar_p = [10, 20, 40, 80];
 
 % Get the different file names of the dataset.
 data_base_name = lower(dataset_name);

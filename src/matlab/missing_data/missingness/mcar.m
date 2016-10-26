@@ -1,14 +1,23 @@
-function [ M_mcar Mt_mcar Mv_mcar ] = mcar( mcar_method, mcar_percent, D, Dt, Dv );
+function [ D_miss, Dt_miss, Dv_miss, M_mcar, Mt_mcar, Mv_mcar ] = ...
+                            mcar( mcar_method, mcar_percent, D, Dt, Dv );
 %MCAR Summary of this function goes here
 %   Detailed explanation goes here
-
-    x = size(D.X,1);
-    y = size(Dv.X,1);
-    z = size(Dt.X,1);
-    n = size(D.X,2);
+    % Set initial values to return D struct.
+    D_miss = D;
+    Dt_miss = Dt;
+    Dv_miss = Dv;
+    % Extract the X matrix to work with those data after. 
+    X = D.X;
+    Xt = Dt.X;
+    Xv = Dv.X;
+    % Get the sizes of each data subset.
+    x = size(X,1);
+    y = size(Xt,1);
+    z = size(Xv,1);
+    n = size(X,2);
 
     switch (mcar_method)
-        case 'mcar_flipcoin' % flip_coin
+        case 'flipcoin' % flip_coin
             total_size = (x+y+z)*n;
             miss_size = round(total_size*(mcar_percent/100));
             rank_v = randperm(total_size);
@@ -23,5 +32,13 @@ function [ M_mcar Mt_mcar Mv_mcar ] = mcar( mcar_method, mcar_percent, D, Dt, Dv
     M_mcar = logical(M_mcar);
     Mt_mcar = logical(Mt_mcar);
     Mv_mcar = logical(Mv_mcar);
+    
+    % Get the final samples of the dataset with missing data as NaN values.
+    X(M_mcar)=NaN;
+    Xt(Mt_mcar)=NaN;
+    Xv(Mv_mcar)=NaN;
+    D_miss.X = X;
+    Dt_miss.X = Xt;
+    Dv_miss.X = Xv;
 end
 
