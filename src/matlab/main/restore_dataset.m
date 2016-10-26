@@ -32,18 +32,18 @@ function [ output_args ] = restore_( dataset_name, imputation_method )
     mkdir(data_dest_folder);
 
     %CAMBIAR PARA HACER AUTOMATICO Y MULTICARPETA
-    data_nomiss_folder = [data_orig_folder filesep 'mcar\flipcoin\0'];
+    data_nomiss_folder = [data_orig_folder filesep 'mcar' filesep 'flipcoin' filesep '0'];
     % Load the original dataset, divided in train, test, validation, ...
     [D Dt Dv F T] = load_dataset(data_nomiss_folder, data_train_name, data_test_name, ...
                                  data_valid_name, data_feat_name);
-    data_miss_folder = [data_orig_folder filesep 'mcar\flipcoin\10'];
+    data_miss_folder = [data_orig_folder filesep 'mcar' filesep 'flipcoin' filesep '10'];
     % Load the missing dataset, divided in train, test, validation, ...
     [D_m Dt_m Dv_m F_m T_m] = load_dataset(data_miss_folder, data_train_name, data_test_name, ...
                                  data_valid_name, data_feat_name);
                              
     for i=1:length(imputation_method)
         data_rest_folder = ...
-                    [data_dest_folder filesep 'mcar\flipcoin\10' filesep imputation_method{i}];
+                    [data_dest_folder filesep 'mcar' filesep 'flipcoin' filesep '10' filesep imputation_method{i}];
         mkdir(data_rest_folder);
         % Apply an imputation over the missing data values.
         [D_r Dt_r Dv_r] = imputation(imputation_method{i}, D_m, Dt_m, Dv_m);
