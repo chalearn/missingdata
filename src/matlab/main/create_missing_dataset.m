@@ -20,7 +20,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
         missing_method{3,2} = mnar_t;
     end
     if (nargin < 4)
-        missing_percentage = [0, 10, 20, 40, 80];
+        missing_percentage = [10, 20, 40, 80];
     end
     
     % Set the dataset folder.
