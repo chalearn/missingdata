@@ -1,4 +1,4 @@
-function h=plot_ev_curve(name, score, x, y, imput_l, old_h)
+function h=plot_ev_curve(name, score, x, y, imput_l, percent_l, old_h)
 %h=plot_learning_curve(name, score, x, y, imput_l, old_h)
 % Plot the learning curve 
 % Inputs:
@@ -13,7 +13,7 @@ function h=plot_ev_curve(name, score, x, y, imput_l, old_h)
 
 color_list = ['r','b','g','y','m','c','b','k'];
 
-if nargin<6 || isempty(old_h);
+if nargin<7 || isempty(old_h);
     h=figure;
 else
     h=figure(old_h); 
@@ -25,12 +25,15 @@ rand_predict=0.5;
 % Add a x=100 and y=0 column in the points matrix.
 x = [x zeros(size(y,1),1)];
 y = [y zeros(size(y,1),1)];
+percent_l = [percent_l '100'];
+percent_l = strcat(percent_l,{'%'});
 for c=1:size(y,1)
     last_point=1; %the last x point is the 100% of missing data.
     y_row = y(c,:);
     x_row = x(c,:);
     plot(y_row, x_row, ['-' color_list(c) 'o'], 'MarkerSize', 8, 'MarkerFaceColor', color_list(c));
-    text(y_row(end-1)-0.1, x_row(end-1)+6, [imput_l(c) ' imput.'], 'Color', color_list(c));
+    text(y_row(1)-0.03, x_row(1)-0.05, [imput_l{c} ' imput.'], 'Color', color_list(c));
+    text(y_row+0.007, x_row-0.015, percent_l, 'Color', color_list(c));
 end
 
 tt=[upper(name)];
