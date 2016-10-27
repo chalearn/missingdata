@@ -26,8 +26,8 @@ function [ D_miss, Dt_miss, Dv_miss, M_mcar, Mt_mcar, Mv_mcar ] = ...
             Dmiss(miss_pos)=1;
             Dmiss = Dmiss';
             M_mcar = Dmiss(1:x,:);
-            Mv_mcar = Dmiss((x+1):(x+y),:);
-            Mt_mcar = Dmiss((x+y+1):end,:);
+            Mt_mcar = Dmiss((x+1):(x+y),:);
+            Mv_mcar = Dmiss((x+y+1):end,:);
     end
     M_mcar = logical(M_mcar);
     Mt_mcar = logical(Mt_mcar);
