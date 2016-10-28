@@ -68,6 +68,25 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
     X(M_mar)=NaN;
     Xt(Mt_mar)=NaN;
     Xv(Mv_mar)=NaN;
+    
+    v_aux = find(v_type_feat==0);
+    probes = find(v_type_feat==2);
+    p_rand = randperm(length(v_aux));
+    for i=1:length(probes)
+        pos_feat = v_aux(p_rand(mod(i-1,length(p_rand))+1));
+        feat_X = X(:,pos_feat);
+        feat_Xt = Xt(:,pos_feat);
+        feat_Xv = Xv(:,pos_feat);
+        feat_X = feat_X(randperm(length(feat_X')));
+        feat_Xt = feat_Xt(randperm(length(feat_Xt')));
+        feat_Xv = feat_Xv(randperm(length(feat_Xv')));
+        X(:,probes(i)) = feat_X;
+        Xt(:,probes(i)) = feat_Xt;
+        Xv(:,probes(i)) = feat_Xv;
+    end
+    M_mar = isnan(X);
+    Mt_mar = isnan(Xt);
+    Mv_mar = isnan(Xv);
     D_miss.X = X;
     Dt_miss.X = Xt;
     Dv_miss.X = Xv;
