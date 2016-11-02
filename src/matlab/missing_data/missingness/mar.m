@@ -68,17 +68,40 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             Mt_mar = Dmiss((x+1):(x+y),:);
             Mv_mar = Dmiss((x+y+1):end,:);
         case 'neigh_and_prod_corr'
+            v_aux_pix = find(v_type_feat==0);
+            v_aux_prod = find(v_type_feat==1);
+            % Check if the number of remove pixels is less than the 75
+            % percent of the real number of pixels than must be removed.
+            pixel_miss = size(v_aux_pix,2)*(mar_percent/100)*0.75;
+            real_miss = (size(v_aux_pix,2)+size(v_aux_prod,2))*(mar_percent/100);
+            p_rand = randperm(length(v_aux_pix));
+            j = 1;
+            while ( ( (sum(Dmiss(1,:)) < real_miss) || ...
+                      (sum(Dmiss(1,v_aux_pix)) < pixel_miss) ) && ...
+                    (j <= length(p_rand)) )
+                Dmiss(:,v_aux_pix(p_rand(j))) = 1;
+                Dmiss(:,v_prod{v_aux_pix(p_rand(j))}) = 1;
+                pos_neigh = getpos_neighbord(v_aux_pix(p_rand(j)), v_type_feat, v_id_pixel, 1);
+                Dmiss(:,pos_neigh) = 1;
+                Dmiss(:,[v_prod{pos_neigh}]) = 1;
+                j=j+1;
+            end
+            M_mar = Dmiss(1:x,:);
+            Mt_mar = Dmiss((x+1):(x+y),:);
+            Mv_mar = Dmiss((x+y+1):end,:);
         case 'top_image'
     end
+    
+    % Generate the probes features with missing values.
     M_mar = logical(M_mar);
     Mt_mar = logical(Mt_mar);
     Mv_mar = logical(Mv_mar);
-    
-    % Get the final samples of the dataset with missing data as NaN values.
+    % Get the final samples of the dataset with missing data on pixels
+    % as NaN values.
     X(M_mar)=NaN;
     Xt(Mt_mar)=NaN;
     Xv(Mv_mar)=NaN;
-    
+    % Generate the probes with missing data values.
     v_aux_pix = find(v_type_feat==0);
     probes = find(v_type_feat==2);
     p_rand = randperm(length(v_aux_pix));
@@ -94,9 +117,12 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
         Xt(:,probes(i)) = feat_Xt;
         Xv(:,probes(i)) = feat_Xv;
     end
+    % Get the final missing data matrix with missing data positions
+    % equal to 1.
     M_mar = isnan(X);
     Mt_mar = isnan(Xt);
     Mv_mar = isnan(Xv);
+    % Get the final samples of the dataset with missing data as NaN values.
     D_miss.X = X;
     Dt_miss.X = Xt;
     Dv_miss.X = Xv;
