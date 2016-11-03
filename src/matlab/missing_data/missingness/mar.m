@@ -90,6 +90,12 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             Mt_mar = Dmiss((x+1):(x+y),:);
             Mv_mar = Dmiss((x+y+1):end,:);
         case 'top_image'
+            pos_top = gettop_image(v_type_feat, v_id_pixel, mar_percent);
+            Dmiss(:,pos_top) = 1;
+            Dmiss(:,[v_prod{pos_top}]) = 1;
+            M_mar = Dmiss(1:x,:);
+            Mt_mar = Dmiss((x+1):(x+y),:);
+            Mv_mar = Dmiss((x+y+1):end,:);            
     end
     
     % Generate the probes features with missing values.

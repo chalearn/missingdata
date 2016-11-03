@@ -9,7 +9,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
     end
     if (nargin < 3)
         mcar_t = {'flipcoin'};
-        mar_t = {'prod','neigh_and_prod'};
+        mar_t = {'prod','neigh_and_prod','neigh_and_prod_corr','top_image'};
         mnar_t = {''};
         missing_method = cell(3,2);
         missing_method{1,1} = 'mcar';
