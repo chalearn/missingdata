@@ -19,8 +19,11 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
     switch(imp_method)
         case 'median' % imputation by median value.
             X_median = nanmedian(X_miss);
+            X_median(isnan(X_median)) = 0;
             Xt_median = nanmedian(Xt_miss);
+            Xt_median(isnan(Xt_median)) = 0;
             Xv_median = nanmedian(Xv_miss);
+            Xv_median(isnan(Xv_median)) = 0;
             X_median = repmat(X_median,x,1);
             Xt_median = repmat(Xt_median,y,1);
             Xv_median = repmat(Xv_median,z,1);
