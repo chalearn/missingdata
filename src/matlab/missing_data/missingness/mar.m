@@ -30,13 +30,13 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             pixel_miss = size(v_aux_pix,2)*(mar_percent/100)*0.75;
             real_miss = (size(v_aux_pix,2)+size(v_aux_prod,2))*(mar_percent/100);
             for i=1:t
-                p_rand = randperm(length(v_aux_pix));
+                p_rand1 = randperm(length(v_aux_pix));
                 j = 1;
                 while ( ( (sum(Dmiss(i,:)) < real_miss) || ...
                           (sum(Dmiss(i,v_aux_pix)) < pixel_miss) ) && ...
-                        (j <= length(p_rand)) )
-                    Dmiss(i,v_aux_pix(p_rand(j))) = 1;
-                    Dmiss(i,v_prod{v_aux_pix(p_rand(j))}) = 1;
+                        (j <= length(p_rand1)) )
+                    Dmiss(i,v_aux_pix(p_rand1(j))) = 1;
+                    Dmiss(i,v_prod{v_aux_pix(p_rand1(j))}) = 1;
                     j=j+1;
                 end
             end
@@ -51,14 +51,14 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             pixel_miss = size(v_aux_pix,2)*(mar_percent/100)*0.75;
             real_miss = (size(v_aux_pix,2)+size(v_aux_prod,2))*(mar_percent/100);
             for i=1:t
-                p_rand = randperm(length(v_aux_pix));
+                p_rand1 = randperm(length(v_aux_pix));
                 j = 1;
                 while ( ( (sum(Dmiss(i,:)) < real_miss) || ...
                           (sum(Dmiss(i,v_aux_pix)) < pixel_miss) ) && ...
-                        (j <= length(p_rand)) )
-                    Dmiss(i,v_aux_pix(p_rand(j))) = 1;
-                    Dmiss(i,v_prod{v_aux_pix(p_rand(j))}) = 1;
-                    pos_neigh = getpos_neighbord(v_aux_pix(p_rand(j)), v_type_feat, v_id_pixel, 1);
+                        (j <= length(p_rand1)) )
+                    Dmiss(i,v_aux_pix(p_rand1(j))) = 1;
+                    Dmiss(i,v_prod{v_aux_pix(p_rand1(j))}) = 1;
+                    pos_neigh = getpos_neighbord(v_aux_pix(p_rand1(j)), v_type_feat, v_id_pixel, 1);
                     Dmiss(i,pos_neigh) = 1;
                     Dmiss(i,[v_prod{pos_neigh}]) = 1;
                     j=j+1;
@@ -74,16 +74,32 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             % percent of the real number of pixels than must be removed.
             pixel_miss = size(v_aux_pix,2)*(mar_percent/100)*0.75;
             real_miss = (size(v_aux_pix,2)+size(v_aux_prod,2))*(mar_percent/100);
-            p_rand = randperm(length(v_aux_pix));
+            p_rand1 = randperm(length(v_aux_pix));
+            p_rand2 = randperm(length(v_aux_pix));
+            r = randperm(x);
+            rt = randperm(y);
+            rv = randperm(z);
+            r_miss1 = [r(1:end/2) rt(1:end/2)+x rv(1:end/2)+x+y];
+            r_miss2 = [r(end/2:end) rt(end/2:end)+x rv(end/2:end)+x+y];
             j = 1;
-            while ( ( (sum(Dmiss(1,:)) < real_miss) || ...
-                      (sum(Dmiss(1,v_aux_pix)) < pixel_miss) ) && ...
-                    (j <= length(p_rand)) )
-                Dmiss(:,v_aux_pix(p_rand(j))) = 1;
-                Dmiss(:,v_prod{v_aux_pix(p_rand(j))}) = 1;
-                pos_neigh = getpos_neighbord(v_aux_pix(p_rand(j)), v_type_feat, v_id_pixel, 1);
-                Dmiss(:,pos_neigh) = 1;
-                Dmiss(:,[v_prod{pos_neigh}]) = 1;
+            while ( ( (sum(Dmiss(r_miss1(1),:)) < real_miss) || ...
+                      (sum(Dmiss(r_miss1(1),v_aux_pix)) < pixel_miss) ) && ...
+                    (j <= length(p_rand1)) )
+                Dmiss(r_miss1,v_aux_pix(p_rand1(j))) = 1;
+                Dmiss(r_miss1,v_prod{v_aux_pix(p_rand1(j))}) = 1;
+                pos_neigh = getpos_neighbord(v_aux_pix(p_rand1(j)), v_type_feat, v_id_pixel, 1);
+                Dmiss(r_miss1,pos_neigh) = 1;
+                Dmiss(r_miss1,[v_prod{pos_neigh}]) = 1;
+                j=j+1;
+            end
+            while ( ( (sum(Dmiss(r_miss2(1),:)) < real_miss) || ...
+                      (sum(Dmiss(r_miss2(1),v_aux_pix)) < pixel_miss) ) && ...
+                    (j <= length(p_rand2)) )
+                Dmiss(r_miss2,v_aux_pix(p_rand2(j))) = 1;
+                Dmiss(r_miss2,v_prod{v_aux_pix(p_rand2(j))}) = 1;
+                pos_neigh = getpos_neighbord(v_aux_pix(p_rand2(j)), v_type_feat, v_id_pixel, 1);
+                Dmiss(r_miss2,pos_neigh) = 1;
+                Dmiss(r_miss2,[v_prod{pos_neigh}]) = 1;
                 j=j+1;
             end
             M_mar = Dmiss(1:x,:);
@@ -91,8 +107,12 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
             Mv_mar = Dmiss((x+y+1):end,:);
         case 'top_image'
             pos_top = gettop_image(v_type_feat, v_id_pixel, mar_percent);
-            Dmiss(:,pos_top) = 1;
-            Dmiss(:,[v_prod{pos_top}]) = 1;
+            r = randperm(x);
+            rt = randperm(y);
+            rv = randperm(z);
+            r_miss = [r(1:end/2) rt(1:end/2)+x rv(1:end/2)+x+y];
+            Dmiss(r_miss, pos_top) = 1;
+            Dmiss(r_miss,[v_prod{pos_top}]) = 1;
             M_mar = Dmiss(1:x,:);
             Mt_mar = Dmiss((x+1):(x+y),:);
             Mv_mar = Dmiss((x+y+1):end,:);            
@@ -110,9 +130,9 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
     % Generate the probes with missing data values.
     v_aux_pix = find(v_type_feat==0);
     probes = find(v_type_feat==2);
-    p_rand = randperm(length(v_aux_pix));
+    p_rand1 = randperm(length(v_aux_pix));
     for i=1:length(probes)
-        pos_feat = v_aux_pix(p_rand(mod(i-1,length(p_rand))+1));
+        pos_feat = v_aux_pix(p_rand1(mod(i-1,length(p_rand1))+1));
         feat_X = X(:,pos_feat);
         feat_Xt = Xt(:,pos_feat);
         feat_Xv = Xv(:,pos_feat);
