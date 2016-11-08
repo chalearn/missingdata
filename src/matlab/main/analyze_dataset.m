@@ -64,10 +64,6 @@ function [ output_args ] = analyze_dataset( dataset_name )
                                              data_valid_name, data_feat_name);
                 aux_folds = dir([data_rest_folder filesep percent_subroute_fold]);
                 miss_impt_fold = aux_folds(3:end);
-                percent_list{1,p} = miss_perc_fold(p).name;
-                imput_list = {'';''}
-                aupr_array = zeros(length(miss_impt_fold),length(miss_perc_fold));
-                aulc_array = zeros(length(miss_impt_fold),length(miss_perc_fold));
                 for i=1:length(miss_impt_fold)
                     imput_subroute_fold = [percent_subroute_fold filesep miss_impt_fold(i).name];                    
                     mkdir([graphs_dest_folder filesep imput_subroute_fold]);
@@ -87,16 +83,6 @@ function [ output_args ] = analyze_dataset( dataset_name )
                     [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
                                         get_plot(valid_r, prec_r, recall_r, num_feats);
                                     
-                    % Add the imput method to the list to draw the PPvsDP plot.
-                    if (isempty(find(ismember(imput_list, miss_impt_fold(i).name))))
-                        imput_list{i,1} = miss_impt_fold(i).name;
-                    end
-                    imput_pos = find(ismember(imput_list, miss_impt_fold(i).name));
-                    % Add the values of the aupr and aulc to draw the
-                    % PPvsDP plot
-                    aupr_array(imput_pos,i) = aupr_v;
-                    aulc_array(imput_pos,i) = aulc_v;
-
                     % Obtain the different plots for the test subset.
                     %[cell_h_auroc, h_total_auroc, h_aulc, h_aupr] = ...
                     %                    get_plot(test_r, prec_r, recall_r, num_feats);
@@ -119,12 +105,8 @@ function [ output_args ] = analyze_dataset( dataset_name )
                          'train_mod', 'prec_r', 'recall_r', 'auroc_v', 'aulc_v', 'aupr_v');
                 end
             end
-            % Print the last plot (evolution of pp vs dp.
-            h_miss_evol = plot_ev_curve('Evolution missing curve', 0, aupr_array, ...
-                                        aulc_array, imput_list, percent_list);  
-            savefig(h_miss_evol, [graphs_dest_folder filesep method_subroute_fold filesep 'pp_vs_dp']);
-            close(h_miss_evol);
         end
     end
+    pp_vs_dp(dataset_name);
 end
 
