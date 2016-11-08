@@ -32,14 +32,14 @@ for c=1:size(y,1)
     y_row = y(c,:);
     x_row = x(c,:);
     plot(y_row, x_row, ['-' color_list(c) 'o'], 'MarkerSize', 8, 'MarkerFaceColor', color_list(c));
-    text(y_row(1)-0.03, x_row(1)-0.05, [imput_l{c} ' imput.'], 'Color', color_list(c));
+    text(y_row(4)-0.03, x_row(4)-0.05, [imput_l{c} ' imput.'], 'Color', color_list(c));
     text(y_row+0.007, x_row-0.015, percent_l, 'Color', color_list(c));
 end
 
 tt=[upper(name)];
 title(tt);
-xlabel('PP');
-ylabel('DP');
+xlabel('DP');
+ylabel('PP');
 xlim([0.5 last_point]);
 ylim([rand_predict 1]);
 plot([0.5 last_point], [1 1]);
