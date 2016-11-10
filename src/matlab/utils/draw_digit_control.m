@@ -65,6 +65,6 @@ while 1
     show_digit(M1,MM1);
     title('Original');
     subplot(1,2,2);
-    show_digit(M2,MM2);
+    show_digit(M2);
     title('Control');
 end
