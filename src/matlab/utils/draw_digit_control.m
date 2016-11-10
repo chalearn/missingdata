@@ -29,7 +29,7 @@ p=-1;
 e=0;
 % Obtain the missing matrix
 X_miss = D_miss.X;
-X_control = zeros(size(D.X))
+X_control = zeros(size(D.X));
 for c=1:size(D.X,2)
     X_control(:,c) = D.X(randperm(size(D.X,1)),c);
 end
