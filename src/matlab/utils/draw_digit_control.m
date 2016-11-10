@@ -24,9 +24,9 @@ function [M1 M2 ] = draw_digit_control(D, D_miss)
 %     end
 % end
 % 
-% n=1;
-% p=-1;
-% e=0;
+n=1;
+p=-1;
+e=0;
 % Obtain the missing matrix
 X_miss = D_miss.X;
 X_control = D.X(randperm(size(D.X,1)),:);
