@@ -30,6 +30,9 @@ e=0;
 % Obtain the missing matrix
 X_miss = D_miss.X;
 X_control = zeros(size(D.X));
+X_feat = zeros(size(D.X));
+X_feat(:,rank_list) = 1;
+
 for c=1:size(D.X,2)
     X_control(:,c) = D.X(randperm(size(D.X,1)),c);
 end
@@ -63,20 +66,19 @@ while 1
         MM1 = isnan(X_miss(num,:));
         M2 = X_control(num,:);
         M3 = D.X(num,:);
-        MM3 = zeros(size(D.X);
-        MM3(:,rank_list) = 1;
+        MM3 = X_feat(num,:);
 %   end
     title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(num,1))], 'FontSize', 16);
     subplot(2,2,1);
     show_digit(M1,MM1,'r');
-    title('Original');
+    title('Original (red points are missing)');
     subplot(2,2,2);
     show_digit(M2);
-    title('Control');
+    title('Control image');
     subplot(2,2,3);
     show_digit(M3,MM3,'b');
-    title('Control');
+    title('Relevant (blue points are the most relevant features)');
     subplot(2,2,4);
     show_digit(M2);
-    title('Control');
+    title('Control image');
 end
