@@ -1,4 +1,4 @@
-function [M1 M2 ] = draw_digit_control(D, D_miss)
+function [ output_args ] = draw_digit_control(D, D_miss, rank_list)
 % M=browse_digit(X,Y,F)
 % Browse through a digit database
 % X -- Matrix with digits in lines
@@ -49,25 +49,34 @@ while 1
     otherwise
         num=idx;
     end
-%    if convert_pix,
-%        M1=zeros(1,28*28);
-%        M1(feat_idx)=D.X(num,feat_loc);
-%        M2=zeros(1,28*28);
-%        M2(feat_idx)=D_miss.X(num,feat_loc);
-%        MM2=zeros(1,28*28);
-%        MM2(feat_idx)=M_mcar(num,feat_loc);
-%        M3=zeros(1,28*28);
-%        M3(feat_idx)=D_mcar.X(num,feat_loc);
-%    else
-        M1=X_miss(num,:);
+%   if convert_pix,
+%       M1=zeros(1,28*28);
+%       M1(feat_idx)=D.X(num,feat_loc);
+%       M2=zeros(1,28*28);
+%       M2(feat_idx)=D_miss.X(num,feat_loc);
+%       MM2=zeros(1,28*28);
+%       MM2(feat_idx)=M_mcar(num,feat_loc);
+%       M3=zeros(1,28*28);
+%       M3(feat_idx)=D_mcar.X(num,feat_loc);
+%   else
+        M1 = X_miss(num,:);
         MM1 = isnan(X_miss(num,:));
-        M2=X_control(num,:);
-%    end
+        M2 = X_control(num,:);
+        M3 = D.X(num,:);
+        MM3 = zeros(size(D.X);
+        MM3(:,rank_list) = 1;
+%   end
     title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(num,1))], 'FontSize', 16);
-    subplot(1,2,1);
-    show_digit(M1,MM1);
+    subplot(2,2,1);
+    show_digit(M1,MM1,'r');
     title('Original');
-    subplot(1,2,2);
+    subplot(2,2,2);
+    show_digit(M2);
+    title('Control');
+    subplot(2,2,3);
+    show_digit(M3,MM3,'b');
+    title('Control');
+    subplot(2,2,4);
     show_digit(M2);
     title('Control');
 end

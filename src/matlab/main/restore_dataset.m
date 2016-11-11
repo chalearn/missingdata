@@ -1,4 +1,4 @@
-function [ output_args ] = restore_( dataset_name, imputation_method )
+function [ output_args ] = restore_dataset( dataset_name, imputation_method )
 %RESTORE_ Summary of this function goes here
 %   Detailed explanation goes here
 

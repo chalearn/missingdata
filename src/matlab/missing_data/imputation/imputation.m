@@ -59,9 +59,34 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
                 Xv_miss(Xv_miss<0)=0;
                 Xv_miss(Xv_miss>999)=999;
             end
+        case 'correlation'
+            miss = isnan(X_miss);
+            miss_t = isnan(Xt_miss);
+            miss_v = isnan(Xv_miss);
+            RHO = corr(X_miss, 'rows', 'pairwise');
+            RHOt = corr(Xt_miss, 'rows', 'pairwise');
+            RHOv = corr(Xv_miss, 'rows', 'pairwise');
+            for c=1:n
+                [sortingX,sortingI] = sort(abs(RHO(c,:)),'descend');
+                [sortingXt,sortingIt] = sort(abs(RHOt(c,:)),'descend');
+                [sortingXv,sortingIv] = sort(abs(RHOv(c,:)),'descend');
+                imp_pos = sortingI(find(~isnan(sortingX)));
+                imp_post = sortingI(find(~isnan(sortingXt)));
+                imp_posv = sortingI(find(~isnan(sortingXv)));
+                f = find(miss(:,c));
+                pos = imp_pos(~isnan(X_miss(f,imp_pos)));
+                X_miss(f,c) = X_miss(f,pos);
+                
+                f = find(miss_t(:,c));
+                pos = imp_post(~isnan(Xt_miss(f,imp_post)));
+                Xt_miss(f,c) = Xt_miss(f,pos);
+                
+                f = find(miss_v(:,c));
+                pos = imp_posv(~isnan(Xv_miss(f,imp_posv)));
+                Xv_miss(f,c) = Xv_miss(f,pos);
+            end
     end
     D_rest.X = X_miss;
     Dt_rest.X = Xt_miss;
     Dv_rest.X = Xv_miss;
 end
-
