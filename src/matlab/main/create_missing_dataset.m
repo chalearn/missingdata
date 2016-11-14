@@ -5,7 +5,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
 
     % Imputation method
     if (nargin < 2)
-        missing_type = {'mcar','mar','mnar'};
+        missing_type = {'mcar','mar'};
     end
     if (nargin < 3)
         mcar_t = {'flipcoin'};
