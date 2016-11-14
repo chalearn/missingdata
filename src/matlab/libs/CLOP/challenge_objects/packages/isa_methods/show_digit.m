@@ -13,16 +13,15 @@ imn = inormalize(im);
 
 if (nargin>1)
     imiss=reshape(miss,nd,nd)';
-    imn(imiss==1)=1;
 end
 
 imn = uint8(imn*(num-1));
 colormap(map);
-hold on
 image(imn); 
 if (nargin>1)
+    hold on
     [x_miss y_miss] = find(imiss);
     plot(y_miss, x_miss, [color '.'],'MarkerSize', 20);
+    hold off
 end
-hold off
 warning on
