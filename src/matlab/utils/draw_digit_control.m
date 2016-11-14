@@ -29,13 +29,8 @@ p=-1;
 e=0;
 % Obtain the missing matrix
 X_miss = D_miss.X;
-X_control = zeros(size(D.X));
 X_feat = zeros(size(D.X));
 X_feat(:,rank_list) = 1;
-
-for c=1:size(D.X,2)
-    X_control(:,c) = D.X(randperm(size(D.X,1)),c);
-end
 
 figure('name', 'Isabelle''s MNIST browser');
 num=0;
@@ -62,23 +57,24 @@ while 1
 %       M3=zeros(1,28*28);
 %       M3(feat_idx)=D_mcar.X(num,feat_loc);
 %   else
-        M1 = D.X(num,:);
-        MM1 = isnan(X_miss(num,:));
-        M2 = X_control(num,:);
-        M3 = D.X(num,:);
-        MM3 = X_feat(num,:);
+        M_o = D.X(num,1:end/2);
+        M_o_miss = isnan(X_miss(num,1:end/2));
+        M_p = D.X(num,end/2:end);
+        M_p_miss = isnan(X_miss(num,end/2:end));
+        M_o_relevant = X_feat(num,1:end/2);
+        M_p_relevant = X_feat(num,end/2:2);
 %   end
     title(['Index: ' num2str(num) ' --  Class: ' num2str(D.Y(num,1))], 'FontSize', 16);
     subplot(2,2,1);
-    show_digit(M1,MM1,'r');
+    show_digit(M_o,M_o_miss,'r');
     title('Original (red points are missing)');
     subplot(2,2,2);
-    show_digit(M2);
+    show_digit(M_p,M_p_miss,'r');
     title('Control image');
     subplot(2,2,3);
-    show_digit(M3,MM3,'b');
+    show_digit(M_o,M_o_relevant,'b');
     title('Relevant (blue points are the most relevant features)');
     subplot(2,2,4);
-    show_digit(M2);
+    show_digit(M_o,M_p_relevant,'b');
     title('Control image');
 end
