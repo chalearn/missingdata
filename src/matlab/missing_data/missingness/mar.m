@@ -1,5 +1,4 @@
-function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
-                            mar( mar_method, mar_percent, D, Dt, Dv, F, T);
+function [ D_miss, Dt_miss, Dv_miss ] = mar( mar_method, mar_percent, D, Dt, Dv, F, T);
 %MCAR Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -143,11 +142,6 @@ function [ D_miss, Dt_miss, Dv_miss, M_mar, Mt_mar, Mv_mar ] = ...
         Xt(:,probes(i)) = feat_Xt;
         Xv(:,probes(i)) = feat_Xv;
     end
-    % Get the final missing data matrix with missing data positions
-    % equal to 1.
-    M_mar = isnan(X);
-    Mt_mar = isnan(Xt);
-    Mv_mar = isnan(Xv);
     % Get the final samples of the dataset with missing data as NaN values.
     D_miss.X = X;
     Dt_miss.X = Xt;
