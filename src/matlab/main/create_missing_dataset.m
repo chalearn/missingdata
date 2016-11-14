@@ -1,11 +1,11 @@
-function [ output_args ] = create_missing_dataset( dataset_name, create_probes, ...
+function [ output_args ] = create_missing_dataset( dataset_name, probes, ...
                                         missing_type, missing_method, ...
                                         missing_percentage )
 %CREATE_MISSING_DATASET Summary of this function goes here
 %   Detailed explanation goes here
 
     if (nargin < 2)
-        create_probes = false;
+        probes = false;
     end
     % Imputation method
     if (nargin < 3)
@@ -74,8 +74,8 @@ function [ output_args ] = create_missing_dataset( dataset_name, create_probes, 
                                             missing_type{t}, ...
                                             missing_method{pos_method,2}{m}, ...
                                             miss_p, D, Dt, Dv, F, T);
-                if (create_probes)
-                    [D_m, Dt_m, Dv_m, F, T] = create_probes(D_m, Dt_m, Dv_m, F, T);
+                if (probes)
+                    [D_m, Dt_m, Dv_m, F, T] = probes(D_m, Dt_m, Dv_m, F, T);
                 end
                 % Save the train data to the files.
                 dlmwrite([data_miss_perc_folder filesep dataset_name '_train.data'], D_m.X, ' ');
