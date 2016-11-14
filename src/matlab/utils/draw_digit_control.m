@@ -62,7 +62,7 @@ while 1
 %       M3=zeros(1,28*28);
 %       M3(feat_idx)=D_mcar.X(num,feat_loc);
 %   else
-        M1 = X_miss(num,:);
+        M1 = D.X(num,:);
         MM1 = isnan(X_miss(num,:));
         M2 = X_control(num,:);
         M3 = D.X(num,:);

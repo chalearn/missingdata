@@ -22,7 +22,7 @@ image(imn);
 if (nargin>1)
     hold on
     [x_miss y_miss] = find(imiss);
-    plot(y_miss, x_miss, [color '.'],'MarkerSize', 30);
+    plot(y_miss, x_miss, [color '.'],'MarkerSize', 25);
     hold off
 end
 warning on
