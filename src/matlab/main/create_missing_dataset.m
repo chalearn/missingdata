@@ -5,15 +5,11 @@ function [ output_args ] = create_missing_dataset( dataset_name, create_probes, 
 %   Detailed explanation goes here
 
     if (nargin < 2)
-<<<<<<< HEAD
-        missing_type = {'mcar','mar'};
-=======
         create_probes = false;
->>>>>>> f72b374b25f719430438fedf9bf053b85eb5832e
     end
     % Imputation method
     if (nargin < 3)
-        missing_type = {'mcar','mar','mnar'};
+        missing_type = {'mcar','mar'};
     end
     if (nargin < 4)
         mcar_t = {'flipcoin'};
