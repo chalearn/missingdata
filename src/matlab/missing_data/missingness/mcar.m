@@ -1,5 +1,4 @@
-function [ D_miss, Dt_miss, Dv_miss, M_mcar, Mt_mcar, Mv_mcar ] = ...
-                            mcar( mcar_method, mcar_percent, D, Dt, Dv );
+function [ D_miss, Dt_miss, Dv_miss ] = mcar( mcar_method, mcar_percent, D, Dt, Dv );
 %MCAR Summary of this function goes here
 %   Detailed explanation goes here
     % Set initial values to return D struct.

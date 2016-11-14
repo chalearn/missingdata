@@ -1,13 +1,17 @@
-function [ output_args ] = create_missing_dataset( dataset_name, missing_type, ...
-                                        missing_method, missing_percentage )
+function [ output_args ] = create_missing_dataset( dataset_name, create_probes, ...
+                                        missing_type, missing_method, ...
+                                        missing_percentage )
 %CREATE_MISSING_DATASET Summary of this function goes here
 %   Detailed explanation goes here
 
-    % Imputation method
     if (nargin < 2)
+        create_probes = false;
+    end
+    % Imputation method
+    if (nargin < 3)
         missing_type = {'mcar','mar','mnar'};
     end
-    if (nargin < 3)
+    if (nargin < 4)
         mcar_t = {'flipcoin'};
         mar_t = {'prod','neigh_and_prod','neigh_and_prod_corr','top_image'};
         mnar_t = {''};
@@ -19,7 +23,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
         missing_method{2,2} = mar_t;
         missing_method{3,2} = mnar_t;
     end
-    if (nargin < 4)
+    if (nargin < 5)
         missing_percentage = [0, 10, 20, 40, 80];
     end
     
@@ -66,10 +70,13 @@ function [ output_args ] = create_missing_dataset( dataset_name, missing_type, .
                 mkdir(data_miss_perc_folder);
                 miss_p = missing_percentage(p);
                 % Apply the correspond missing mechanism.
-                [D_m, Dt_m, Dv_m, M_m, Mt_m, Mv_m] = missing_data( ...
+                [D_m, Dt_m, Dv_m] = missing_data( ...
                                             missing_type{t}, ...
                                             missing_method{pos_method,2}{m}, ...
                                             miss_p, D, Dt, Dv, F, T);
+                if (create_probes)
+                    [D_m, Dt_m, Dv_m, F, T] = create_probes(D_m, Dt_m, Dv_m, F, T);
+                end
                 % Save the train data to the files.
                 dlmwrite([data_miss_perc_folder filesep dataset_name '_train.data'], D_m.X, ' ');
                 dlmwrite([data_miss_perc_folder filesep dataset_name '_train.labels'], D_m.Y, ' ');
