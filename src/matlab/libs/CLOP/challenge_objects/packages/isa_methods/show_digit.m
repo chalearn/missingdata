@@ -13,7 +13,7 @@ imn = inormalize(im);
 
 if (nargin>1)
     imiss=reshape(miss,nd,nd)';
-    imn(isnan(v))=1;
+    imn(isnan(imn))=1;
 end
 
 imn = uint8(imn*(num-1));
