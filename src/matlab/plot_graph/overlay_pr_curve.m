@@ -37,7 +37,7 @@ if ~isempty(e)
 end
 
 plot(x, y, ['-' color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', color_list(pos));
-text(0.6, 0.8-(0.03*pos), [percent_l{pos} ' %'], 'Color', color_list(pos));
+text(0.25, 0.8-(0.03*pos), [percent_l{pos} ' %'], 'Color', color_list(pos));
     
 %plot([0 last_point], [1 1]);
 %plot([last_point last_point], [rand_predict 1]);
