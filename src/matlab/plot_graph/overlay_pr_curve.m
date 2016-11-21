@@ -1,4 +1,4 @@
-function h=plot_pr_curve(name, score, x, y, e, old_h)
+function h=plot_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
 %h=plot_pr_curve(name, score, x, y, e, old_h)
 % Plot the learning curve 
 % Inputs:
@@ -11,12 +11,13 @@ function h=plot_pr_curve(name, score, x, y, e, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
+color_list = ['r','b','y','m','k','g','b','c'];
+
 if nargin<5, e=[]; end
-if nargin<6 || isempty(old_h);
+if nargin<8 || isempty(old_h);
     h=figure;
 else
-    h=figure(old_h);
-    cla
+    h=figure(old_h); 
 end
 hold on
 
@@ -28,14 +29,16 @@ final_score=y(end);
 
 % Show the area under the curve
 %patch([x last_point 0 0], [y rand_predict rand_predict y(1)], [1 0.9 0.6]);
-patch([x last_point 0 0], [y 0 0 y(1)], [1 0.9 0.6]);
+%patch([x last_point 0 0], [y 0 0 y(1)], [1 0.9 0.6]);
 
 % Plot the curve with error bars
 if ~isempty(e)
-    errorbar(x, y, e, 'r', 'LineWidth', 2);
+    errorbar(x, y, e, [color_list(pos)], 'LineWidth', 2);
 end
 
-plot(x, y, 'ro', 'MarkerSize', 8, 'MarkerFaceColor', 'r');
+plot(x, y, ['-' color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', color_list(pos));
+text(0.6, 0.8-(0.03*pos), [percent_l{pos} ' %'], 'Color', color_list(pos));
+    
 %plot([0 last_point], [1 1]);
 %plot([last_point last_point], [rand_predict 1]);
 %plot([0 last_point], [rand_predict rand_predict]);

@@ -52,7 +52,6 @@ function [ output_args ] = analyze_dataset( dataset_name )
             miss_perc_fold = aux_folds(3:end);
             % Create a list of percentage value used to generate the
             % PPvsDP plot.
-            percent_list = cell(1,length(miss_perc_fold));
             for p=1:length(miss_perc_fold)
                 percent_subroute_fold = [method_subroute_fold filesep miss_perc_fold(p).name];
                 mkdir([graphs_dest_folder filesep percent_subroute_fold]);
