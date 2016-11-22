@@ -33,7 +33,7 @@ final_score=y(end);
 errorbar(x, y, e, [color_list(pos)], 'LineWidth', 2);
 
 plot(x, y, [color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', [color_list(pos)]);
-text(x(12)-1, 0.8-(0.03*pos), [percent_l{pos} ' %'], 'Color', color_list(pos));
+text(x(12)-1, 0.8-(0.03*pos), [percent_l{pos} '% = ' num2str(final_score)], 'Color', color_list(pos));
 plot([0 last_point], [1 1]);
 plot([last_point last_point], [rand_predict 1]);
 plot([0 last_point], [rand_predict rand_predict]);
@@ -44,7 +44,7 @@ plot([0 0], [rand_predict 1]);
 %tt=[upper(name) ': ALC=' num2str(score, '%5.4f')]; 
 %title(tt);
 %text(last_point+1, final_score, num2str(final_score, '-%5.4f\n'));
-text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
+%text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
 xlabel('Log_2(Number of features)');
 ylabel('Area under the ROC curve (AUROC)');
 xl=xlim; yl=ylim;
