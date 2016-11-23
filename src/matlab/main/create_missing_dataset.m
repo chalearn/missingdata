@@ -24,7 +24,7 @@ function [ output_args ] = create_missing_dataset( dataset_name, probes, ...
         missing_method{3,2} = mnar_t;
     end
     if (nargin < 5)
-        missing_percentage = [0, 10, 20, 40, 80];
+        missing_percentage = [0, 10, 20, 40, 60, 80, 90];
     end
     
     % Set the dataset folder.
