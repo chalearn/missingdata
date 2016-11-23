@@ -1,4 +1,4 @@
-function h=plot_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
+function h=overlay_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
 %h=plot_pr_curve(name, score, x, y, e, old_h)
 % Plot the learning curve 
 % Inputs:
@@ -11,7 +11,7 @@ function h=plot_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-color_list = ['r','b','y','m','k','g','b','c'];
+color_list = ['r','b','g','m','k','y','b','c'];
 
 if nargin<5, e=[]; end
 if nargin<8 || isempty(old_h);

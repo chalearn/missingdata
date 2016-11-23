@@ -1,8 +1,17 @@
 function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
-                            get_plot( test_r, prec_r, recall_r, num_feats )
+                            get_overlay_plot( test_r, prec_r, recall_r, num_feats, ...
+                            h_aulc_orig, h_aupr_orig, percent_list, position )
 %GET_PLOT Summary of this function goes here
 %   Detailed explanation goes here
 
+    if (nargin<5) h_aulc_orig=[];
+    end
+    if (nargin<6) h_aupr_orig=[];
+    end
+    if (nargin<7) percent_list=[];
+    end
+    if (nargin<8) position=1;
+    end
     num_plots = length(test_r);
 
     if (num_plots > 0)
@@ -36,12 +45,22 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
     % Measure the predictive power with AULC
     % Learning curve and AULC
     AULC = alc(num_feats, auc_va);
-    h_aulc=plot_learning_curve('Learning curve', AULC, num_feats, auc_va, sigma_va);
+    if (isempty(h_aulc_orig))
+        h_aulc=overlay_learning_curve('Learning curve', AULC, num_feats, auc_va, ...
+                                   sigma_va, percent_list, position);
     %fprintf('+++ Area under the learnign curve AULC = %5.4f +++\n', AULC);
-        
+    else h_aulc=overlay_learning_curve('Learning curve', AULC, num_feats, auc_va, ...
+                                       sigma_va, percent_list, position, h_aulc_orig);
+    end
+    
     % Measure the discovery power with AUPR
     % Precision-recall curve (we use the same code...)
     AUPR = aupr(recall_r, prec_r);
-    h_aupr=plot_pr_curve('PR curve', AUPR, recall_r, prec_r);
+    if (isempty(h_aulc_orig))
+        h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, [], ...
+                                percent_list, position);
+    else h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, [], ...
+                                 percent_list, position, h_aupr_orig);
+    end
 end
 

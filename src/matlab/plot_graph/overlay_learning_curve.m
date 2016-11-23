@@ -1,4 +1,4 @@
-function h=plot_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
+function h=overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
 %h=plot_learning_curve(name, score, x, y, e, old_h)
 % Plot the learning curve 
 % Inputs:
@@ -11,7 +11,7 @@ function h=plot_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-color_list = ['r','b','y','m','k','g','b','c'];
+color_list = ['r','b','g','m','k','y','b','c'];
 
 if nargin<8 || isempty(old_h);
     h=figure;
@@ -33,7 +33,7 @@ final_score=y(end);
 errorbar(x, y, e, [color_list(pos)], 'LineWidth', 2);
 
 plot(x, y, [color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', [color_list(pos)]);
-text(x(12)-1, 0.8-(0.03*pos), [percent_l{pos} '% = ' num2str(final_score)], 'Color', color_list(pos));
+text(x(10)-1, 0.8-(0.03*pos), [percent_l{pos} '% = ' num2str(final_score)], 'Color', color_list(pos));
 plot([0 last_point], [1 1]);
 plot([last_point last_point], [rand_predict 1]);
 plot([0 last_point], [rand_predict rand_predict]);

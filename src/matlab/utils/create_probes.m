@@ -1,10 +1,12 @@
-function [ D, Dt, Dv, F, T ] = create_probes(D, Dt, Dv, F, T)
+function [ D, Dt, Dv, T ] = create_probes(D, Dt, Dv)
 %CREATE_PROBES Summary of this function goes here
 %   Detailed explanation goes here
 
     X_prob = zeros(size(D.X));
     Xt_prob = zeros(size(Dt.X));
     Xv_prob = zeros(size(Dv.X));
+    T_orig = ones(size(D.X,2),1);
+    T_prob = ones(size(D.X,2),1).*-1;
     for c=1:size(D.X,2)
         X_prob(:,c) = D.X(randperm(size(D.X,1)),c);
     end
@@ -17,5 +19,6 @@ function [ D, Dt, Dv, F, T ] = create_probes(D, Dt, Dv, F, T)
     D.X = [D.X X_prob];
     Dt.X = [Dt.X Xt_prob];
     Dv.X = [Dv.X Xv_prob];
+    T = [T_orig; T_prob];
 end
 

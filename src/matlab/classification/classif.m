@@ -23,7 +23,7 @@ function [ train_r, valid_r, test_r, train_mod, precision_r, recall_r ] ...
         [train_r{i}, train_mod{i}] = train(my_cl_method, D_train);
         D_valid = data(Dv.X(:, fid{i}), Dv.Y);
         valid_r{i} = test(train_mod{i}, D_valid);
-        D_test = data(Dv.X(:, fid{i}), Dv.Y);
+        D_test = data(Dt.X(:, fid{i}), Dt.Y);
         test_r{i} = test(train_mod{i}, D_test);
         num_positive = length(find(T==1));
         num_feats = length(fid{i});
