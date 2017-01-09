@@ -30,7 +30,7 @@ function [ output_args ] = overlay_plot( dataset_name )
                 percent_subroute_fold = [method_subroute_fold filesep miss_perc_fold(p).name];
                 aux_folds = dir([result_folder filesep percent_subroute_fold]);
                 miss_impt_fold = aux_folds(3:end);
-                percent_list{1,p} = miss_perc_fold(p).name;
+                percent_list{1,p} = [miss_perc_fold(p).name ' %'];
                 if ( p == 1)
                     imput_list = {miss_impt_fold(:).name}';
                     h_aupr_array = cell(length(miss_impt_fold),length(miss_perc_fold));

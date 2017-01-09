@@ -35,8 +35,8 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
     
     % Measure the predictive power with AULC
     % Learning curve and AULC
-    AULC = alc(num_feats, auc_va);
-    h_aulc=plot_learning_curve('Learning curve', AULC, num_feats, auc_va, sigma_va);
+    AULC = alc(num_feats(1:length(auc_va)), auc_va);
+    h_aulc=plot_learning_curve('Learning curve', AULC, num_feats(1:length(auc_va)), auc_va, sigma_va);
     %fprintf('+++ Area under the learnign curve AULC = %5.4f +++\n', AULC);
         
     % Measure the discovery power with AUPR

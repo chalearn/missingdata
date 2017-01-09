@@ -74,7 +74,7 @@ function [ output_args ] = analyze_dataset( dataset_name )
                                                  data_train_name, data_test_name, ...
                                                  data_valid_name, data_feat_name);
                     % Feature selection process.
-                    [rank_list num_feats] = fs_rank( 1, 1, D_r, Dt_r, Dv_r);
+                    [rank_list num_feats] = fs_rank( 2, 1, D_r, Dt_r, Dv_r);
                     % Classification with the different feature subsets. 
                     [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
                                         classif(1, D_r, Dt_r, Dv_r, F_r, T_r, rank_list);

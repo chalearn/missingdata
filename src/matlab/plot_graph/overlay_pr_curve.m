@@ -11,7 +11,7 @@ function h=overlay_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-color_list = ['r','b','g','m','k','y','b','c'];
+style_list = {'-r','--r',':r','-.r','-b','--b',':b','-.b'};
 
 if nargin<5, e=[]; end
 if nargin<8 || isempty(old_h);
@@ -33,11 +33,13 @@ final_score=y(end);
 
 % Plot the curve with error bars
 if ~isempty(e)
-    errorbar(x, y, e, [color_list(pos)], 'LineWidth', 2);
+    errorbar(x, y, e, style_list(pos), 'LineWidth', 2);
 end
 
-plot(x, y, ['-' color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', color_list(pos));
-text(0.25, 0.8-(0.03*pos), [percent_l{pos} ' %'], 'Color', color_list(pos));
+plot(x, y, style_list{pos}, 'MarkerSize', 6);
+if (pos == length(percent_l))
+    legend(percent_l,'FontSize',12)
+end
     
 %plot([0 last_point], [1 1]);
 %plot([last_point last_point], [rand_predict 1]);

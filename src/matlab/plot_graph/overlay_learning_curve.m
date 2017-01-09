@@ -11,7 +11,7 @@ function h=overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-color_list = ['r','b','g','m','k','y','b','c'];
+style_list = {'-r','--r',':r','-.r','-b','--b',':b','-.b'};
 
 if nargin<8 || isempty(old_h);
     h=figure;
@@ -30,14 +30,21 @@ final_score=y(end);
 %patch([x last_point 0 0], [y rand_predict rand_predict y(1)], [1 0.9 0.6]);
 
 % Plot the curve with error bars
-errorbar(x, y, e, [color_list(pos)], 'LineWidth', 2);
+errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
 
-plot(x, y, [color_list(pos) 'o'], 'MarkerSize', 6, 'MarkerFaceColor', [color_list(pos)]);
-text(x(10)-1, 0.8-(0.03*pos), [percent_l{pos} '% = ' num2str(final_score)], 'Color', color_list(pos));
-plot([0 last_point], [1 1]);
-plot([last_point last_point], [rand_predict 1]);
-plot([0 last_point], [rand_predict rand_predict]);
-plot([0 0], [rand_predict 1]);
+plot(x, y, style_list{pos}, 'MarkerSize', 6);
+if (pos == length(percent_l))
+    line_data = findobj(h,'Type','line');
+    line_data = fliplr(line_data')';
+    for i=1:length(line_data)
+        percent_l{i} = [percent_l{i} ' = ' num2str(line_data(i).YData(end))];
+    end
+    legend(line_data, percent_l,'FontSize',12,'Location', 'southeast');
+end
+%plot([0 last_point], [1 1]);
+%plot([last_point last_point], [rand_predict 1]);
+%plot([0 last_point], [rand_predict rand_predict]);
+%plot([0 0], [rand_predict 1]);
 %plot([0 last_point], [rand_predict 1], '-.');
 %plot([last_point last_point+1], [final_score final_score], 'k--');
 %name(name=='_')=' ';

@@ -59,6 +59,8 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
                 Xv_miss(Xv_miss<0)=0;
                 Xv_miss(Xv_miss>999)=999;
             end
+        case 'linear_regression'
+            [p,S,mu] = polyfit(helper(good_idx),source(good_idx),1);
         case 'correlation'
             miss = isnan(X_miss);
             miss_t = isnan(Xt_miss);
@@ -85,6 +87,8 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
                 pos = imp_posv(~isnan(Xv_miss(f,imp_posv)));
                 Xv_miss(f,c) = Xv_miss(f,pos);
             end
+        case 'listwise' % imputation by list wise deletion
+
     end
     D_rest.X = X_miss;
     Dt_rest.X = Xt_miss;

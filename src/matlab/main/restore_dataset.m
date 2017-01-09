@@ -4,7 +4,7 @@ function [ output_args ] = restore_dataset( dataset_name, imputation_method )
 
     % Imputation method
     if (nargin < 2)
-        imputation_method = {'median','svd'};
+        imputation_method = {'median','svd','listwise'};
     end
     
     % Set the dataset folder.
