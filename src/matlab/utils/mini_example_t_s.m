@@ -13,7 +13,7 @@ use_spider_clop;
 % variable and the target are significantly dependent. We will use a
 % variant of the T-statistic to measure that dependence.
 
-%T->H->S
+%T->S  H
 
 % All variables have n = n1+n2 values.
 
@@ -23,7 +23,7 @@ n1=50;
 n2=50;
 target = [ones(n1,1); -ones(n2,1)];
 
-% The "helper" variable is a Gaussian mixture.
+% The "source" variable is a Gaussian mixture.
 % The samples for each class are Gaussian distributed with standard 
 % deviations s1 and s2, and means m1 and m2 separated by delta_mu
 
@@ -33,14 +33,14 @@ mu1=alpha*delta_mu/2;
 mu2=-alpha*delta_mu/2;
 s1=delta_mu;
 s2=delta_mu;
-helper = [s1*randn(n1,1)+mu1; s2*randn(n1,1)+mu2];
+source = [s1*randn(n1,1)+mu1; s2*randn(n1,1)+mu2];
 
 % The helper variable, correlated with the source, has no missing values
-a = 1; % slope
-b = 0; % intercept
-noise_level = delta_mu/2;
-noise = randn(n1+n2, 1)*noise_level;
-source = a * helper + b + noise;
+alpha2 = 1; % signal to noise ratio
+delta_mu2=1;
+mu2=alpha2*delta_mu2/2;
+s2=delta_mu2;
+helper = [s*randn(n1+n2,1)+mu2];
 
 % Create the missing data with the same sample size of missing in each class.
 frac_missing = 0.8;
@@ -76,16 +76,14 @@ s_hat([good_idx; miss_idx]) = [source(good_idx); f(miss_idx)];
 figure;
 scatterplot([helper, s_hat'], target_miss_class_plot, 1);
 
-%Generate ideal 
-
 %Residual for the non missing values
 sigma_res = sqrt(sum((f(good_idx)-source(good_idx)).^2));
 
-%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(mu1-mu2)
 % Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
 mean_diff = abs(mean(f(target==1)) - mean(f(target==-1)));
 
-%% Compute the modify T statistic abs(m1-mu2) / sigma to independent variables with equal sample sizes and equal variance
+%% Compute the modify T statistic abs(mu1-mu2) / sigma to independent variables with equal sample sizes and equal variance
 
 %sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
 sigma_pooled1 = std(f(target==1));
@@ -103,7 +101,7 @@ t_statistic = mean_diff/sigma
 % Compute the original t-stat
 t_statistic_orig = mean_diff/sigma_orig
 % that should be the same as the one obtained by the matlab version
-[a,b,c,stats] = ttest2(source(target==1),source(target==-1));
+%[h0,p,ci,stats] = ttest2(source(target==1),source(target==-1))
 % Get the p-value of the statistic
 p_value = (1-tcdf (t_statistic,2*n1-2))*2
 p_value_orig = (1-tcdf (t_statistic_orig,2*n1-2))*2

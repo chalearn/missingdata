@@ -1,4 +1,4 @@
-function [h,A,Canvas,patches,pax] = scatterplot(X, Y)
+function [h,A,Canvas,patches,pax] = scatterplot(X, Y, imput)
 %[h,A,Canvas,patches,pax] = scatterplot(X, Y)
 % Creates scatter plots of the columns of X.
 % On the diagonal, make a histogram.
@@ -39,11 +39,32 @@ if 1==2
     end
 end
 % Assumes 2 classes +-1; red is +1; blue is -1 or 0
-if min(min(Y))==-1 
-    Y=(Y+1)/2;
+if (size(unique(Y),1) == 2)
+    if min(min(Y))==-1 
+        Y=(Y+1)/2;
+    end
 end
-col='cbrkgmcrbkgmcrbkgmcrbkgmcrbkgm';
-sym='+..o++ooooooddddddxxxxxxssssss';
+
+% Assumes 3 classes classes +-1 and missing data 0; red is +1; blue is -1 and black is 0
+if (size(unique(Y),1) == 3)
+    Y(Y==0)=2;
+    Y(Y==-1)=0;
+end
+
+% Assumes 3 classes classes +-1 and missing data 0; red is +1; blue is -1 and black is 0
+if (size(unique(Y),1) == 4)
+    Y(Y==2)=3;
+    Y(Y==-1)=0;
+    Y(Y==-2)=2;
+end
+col2='cbrkgmcrbkgmcrbkgmcrbkgmcrbkgm';
+if ~imput
+    col = [0 1 1; 1 0 0; 0 0 1; 1 .7 0; 1 .7 0; 1 .7 0; 0.5 1 0; 0 0 0];
+    sym='+..xp+ooooooddddddxxxxxxssssss';
+else
+    col = [0 1 1; 1 0 0; 0 0 1; 1 0 0; 0 0 1; 0.5 1 0; 0 0 0];
+    sym='+..xx+ooooooddddddxxxxxxssssss';
+end
         
 if ndims(X)>2 | ndims(Y)>2, error('X an Y must be 2 dim'); help scatterplot; end
 if (ndims(X)==2) & any(size(X)==1), X = X(:); end
@@ -54,7 +75,8 @@ if (p==0 | n==0)
 end
     
 coln=length(col);
-cmap=make_cmap(col);
+%cmap=make_cmap(col);
+cmap=col(2:end,:);
 
 % Create Canvas and make it invisible
 Canvas = newplot;
@@ -94,12 +116,12 @@ for i=n:-1:1,
         end
         for k=1:cl_num
             SS=sym(mod(k, coln)+1);
-            hh(i,j,:) = plot(X(cl_idx{k},j), X(cl_idx{k},i), [col(mod(k, coln)+1) SS])';
+            hh(i,j,:) = plot(X(cl_idx{k},j), X(cl_idx{k},i), SS, 'Color', col(mod(k, coln)+1,:))';
             hold on
             if SS=='.', 
                 set(hh(i,j,:),'markersize',1.5*markersize);
             else
-                set(hh(i,j,:),'markersize',0.5*markersize);
+                set(hh(i,j,:),'markersize',0.7*markersize);
             end
         end
 
@@ -112,6 +134,8 @@ end
 xlimmin = min(xlim(:,:,1),[],1); xlimmax = max(xlim(:,:,2),[],1);
 ylimmin = min(ylim(:,:,1),[],2); ylimmax = max(ylim(:,:,2),[],2);
 
+xlimmin = [-4 -4]; xlimmax = [4 4];
+ylimmin = [-4;-4]; ylimmax = [4; 4];
 % Try to be smart about axes limits and labels.  Set all the limits of a
 % row or column to be the same and inset the tick marks by 10 percent.
 inset = .15;
@@ -166,7 +190,7 @@ end
 
 return
 
-function cmap=make_cmap(col)
+%function cmap=make_cmap(col)
 
 % Red 1 0 0
 % Green 0 1 0
@@ -175,10 +199,11 @@ function cmap=make_cmap(col)
 % magenta 1 0 1
 % cyan 0 1 1
 % Yellow 1 1 0
-colcode='rgbkmc';
-colmat=[1 0 0; 0 1 0; 0 0 1; 0 0 0; 1 0 1; 0 1 1];
+%colcode='rgbkmc';
+%colmat=[1 0 0; 0 1 0; 0 0 1; 0 0 0; 1 0 1; 0 1 1];
 
-for k=2:length(col)
-    pos=strfind(colcode, col(k));
-    cmap(k-1,:)=colmat(pos,:);
-end
+%for k=2:length(col)
+%    pos=strfind(colcode, col(k));
+%    cmap(k-1,:)=colmat(pos,:);
+%    cmap(k-1,:)=col(k,:);
+%end

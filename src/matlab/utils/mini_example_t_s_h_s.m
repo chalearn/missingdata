@@ -39,31 +39,18 @@ noise_level = delta_mu/2;
 noise = randn(n1+n2, 1)*noise_level;
 source = a * (helper + target) + b + noise;
 
-% The source variable has missing data
-
+% Create the missing data with the same sample size of missing in each class.
 frac_missing = 0.8;
-Rs = rand(n1+n2,1)<=frac_missing;
-miss_idx = find(Rs==1);
-good_idx = find(Rs==0);
-
-% Plot with missing data == 0
-min_val=floor(min(source));
-idx1=1:n1;
-idx2=n1+1:n1+n2;
-good_idx1=intersect(idx1, good_idx); % for positive class
-good_idx2=intersect(idx2, good_idx); % for negative class
-miss_idx1=intersect(idx1, miss_idx);
-miss_idx2=intersect(idx2, miss_idx);
-figure; hold on
-plot(helper(good_idx1), source(good_idx1), 'ro'); %points for positive class, no missing
-plot(helper(good_idx2), source(good_idx2), 'bo'); %points for negative class, no missing
-plot(helper(miss_idx1), min_val*ones(size(miss_idx1)), 'r+'); % missing point for positive class
-plot(helper(miss_idx2), min_val*ones(size(miss_idx2)), 'b+'); % missing points for negative class
-
-title('No imputation');
-xlabel('Helper');
-ylabel('Source');
-legend({'Positive class', 'Negative class'});
+idx1=find(target==1);
+idx2=find(target==-1);
+aux_idx1 = idx1(randperm(n1));
+aux_idx2 = idx2(randperm(n2));
+miss_idx1 = aux_idx1(1:n1*frac_missing);
+miss_idx2 = aux_idx2(1:n2*frac_missing);
+good_idx1 = aux_idx1(n1*frac_missing+1:end);
+good_idx2 = aux_idx2(n2*frac_missing+1:end);
+good_idx = union(good_idx1, good_idx2);
+miss_idx = union(miss_idx1, miss_idx2);
 
 %% Perform a linear regression of H on S with non missing data F(H) = aH + b
 
@@ -73,12 +60,18 @@ legend({'Positive class', 'Negative class'});
 
 % To see how good the fit is, evaluate the polynomial at the data points and generate a table showing the data, fit, and error.
 f = polyval(p,helper);
-plot(helper,f)
-hold off;
 T = table(helper(good_idx),source(good_idx),f(good_idx),source(good_idx)-f(good_idx),'VariableNames',{'X','Y','Fit','FitError'});
 
 figure;
-scatterplot([helper, source], target);
+scatterplot([helper, source], target, 0);
+figure;
+target_miss_class_plot = target;
+target_miss_class_plot(miss_idx1) = 2;
+target_miss_class_plot(miss_idx2) = -2;
+scatterplot([helper, source], target_miss_class_plot, 0);
+s_hat([good_idx; miss_idx]) = [source(good_idx); f(miss_idx)]; 
+figure;
+scatterplot([helper, s_hat'], target_miss_class_plot, 1);
 
 %Residual for the non missing values
 sigma_res = sqrt(sum((f(good_idx)-source(good_idx)).^2));
@@ -109,3 +102,56 @@ t_statistic_orig = mean_diff/sigma_orig
 % Get the p-value of the statistic
 p_value = (1-tcdf (t_statistic,2*n1-2))*2
 p_value_orig = (1-tcdf (t_statistic_orig,2*n1-2))*2
+
+
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
+% Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
+mean_diff = abs(mean(source(target==1)) - mean(source(target==-1)));
+
+%sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
+sigma_pooled1 = std(source(target==1));
+sigma_pooled2 = std(source(target==-1));
+
+% Denominator of the original t-stat
+sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+
+% Compute the original t-stat
+t_statistic_nomissing = mean_diff/sigma_orig
+% Get the p-value of the statistic
+p_value_nomissing = (1-tcdf (t_statistic_nomissing,2*n1-2))*2
+
+
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
+% Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
+mean_diff = abs(mean(source(good_idx1)) - mean(source(good_idx2)));
+
+%sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
+sigma_pooled1 = std(source(good_idx1));
+sigma_pooled2 = std(source(good_idx2));
+
+% Denominator of the original t-stat
+sigma_orig = sqrt(2/length(good_idx1)) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+
+% Compute the original t-stat
+t_statistic_listwise = mean_diff/sigma_orig
+% Get the p-value of the statistic
+p_value_listwise = (1-tcdf (t_statistic_listwise,2*length(good_idx1)-2))*2
+
+
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
+% Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
+s_mean_imput = source;
+s_mean_imput(miss_idx) = mean(s_mean_imput(good_idx));
+mean_diff = abs(mean(s_mean_imput(target==1)) - mean(s_mean_imput(target==-1)));
+
+%sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
+sigma_pooled1 = std(s_mean_imput(target==1));
+sigma_pooled2 = std(s_mean_imput(target==-1));
+
+% Denominator of the original t-stat
+sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+
+% Compute the original t-stat
+t_statistic_meanimput = mean_diff/sigma_orig
+% Get the p-value of the statistic
+p_value_meanimput = (1-tcdf (t_statistic_meanimput,2*n1-2))*2
