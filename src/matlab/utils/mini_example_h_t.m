@@ -13,31 +13,35 @@ use_spider_clop;
 % variable and the target are significantly dependent. We will use a
 % variant of the T-statistic to measure that dependence.
 
-%T->H<-S
+%T<-H  S
 
 % All variables have n = n1+n2 values.
+n=100;
 
-% The target variable has n1 examaples of the positive class and n2
-% examples of the negative class.
-n1=50;
-n2=50;
-target = [ones(n1,1); -ones(n2,1)];
-
-% The "source" variable is a Gaussian mixture.
-% The samples for each class are Gaussian distributed with standard 
-% deviations s1 and s2, and means m1 and m2 separated by delta_mu
+% The "helper" variable is a Gaussian distribution with standard 
+% deviation s and mean m separated by delta_mu. The helper variable has no 
+% missing data
 alpha = 1; % signal to noise ratio
 delta_mu=1;
 mu=alpha*delta_mu/2;
 s=delta_mu;
-source = [s*randn(n1+n2,1)+mu];
+helper = [s*randn(n,1)+mu];
 
 % The source variable, correlated with the helper, has missing data
-a = 1; % slope
-b = 0; % intercept
-noise_level = delta_mu/2;
-noise = randn(n1+n2, 1)*noise_level;
-helper = a * (source + target) + b + noise;
+alpha = 1; % signal to noise ratio
+delta_mu=1;
+mu=alpha*delta_mu/2;
+s=delta_mu;
+source = [s*randn(n,1)+mu];
+
+% The target variable has n1 examaples of the positive class and n2
+% examples of the negative class.
+beta=1;
+target = ones(n,1);
+auxt = rand_sigmoid(helper,beta);
+target(find(~auxt))=-1;
+n1 = sum(auxt);
+n2 = sum(~auxt);
 
 % Create the missing data with the same sample size of missing in each class.
 frac_missing = 0.8;
@@ -51,6 +55,7 @@ good_idx1 = aux_idx1(n1*frac_missing+1:end);
 good_idx2 = aux_idx2(n2*frac_missing+1:end);
 good_idx = union(good_idx1, good_idx2);
 miss_idx = union(miss_idx1, miss_idx2);
+
 
 %% Perform a linear regression of H on S with non missing data F(H) = aH + b
 
@@ -73,24 +78,27 @@ s_hat([good_idx; miss_idx]) = [source(good_idx); f(miss_idx)];
 figure;
 scatterplot([helper, s_hat'], target_miss_class_plot, 1);
 
+%Generate ideal 
+
 %Residual for the non missing values
 sigma_res = sqrt(sum((f(good_idx)-source(good_idx)).^2));
 
-%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(mu1-mu2)
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
 % Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
 mean_diff = abs(mean(f(target==1)) - mean(f(target==-1)));
 
-%% Compute the modify T statistic abs(mu1-mu2) / sigma to independent variables with equal sample sizes and equal variance
+%% Compute the modify T statistic abs(m1-mu2) / sigma to independent variables with equal sample sizes and equal variance
 
 %sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
 sigma_pooled1 = std(f(target==1));
 sigma_pooled2 = std(f(target==-1));
-sigma_pooled = sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+sigma_pooled = sqrt(((n1-1)*(sigma_pooled1^2))+((n2-1)*(sigma_pooled2^2))/(n1+n2-2));
 
 % Denominator of the modified t-stat
-sigma = sqrt((2*(sigma_pooled^2+sigma_res^2))/n1);
+sigma = sqrt(((1/n1 + 1/n2)*(sigma_pooled^2+sigma_res^2)));
 % Denominator of the original t-stat
-sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+sigma_orig = sqrt(1/n1 + 1/n2) * ...
+             sqrt(((n1-1)*(sigma_pooled1^2))+((n2-1)*(sigma_pooled2^2))/(n1+n2-2));
 
 % Compute the modified t-stat
 t_statistic = mean_diff/sigma
@@ -98,10 +106,10 @@ t_statistic = mean_diff/sigma
 % Compute the original t-stat
 t_statistic_orig = mean_diff/sigma_orig
 % that should be the same as the one obtained by the matlab version
-%[h0,p,ci,stats] = ttest2(source(target==1),source(target==-1))
+%[a,b,c,stats] = ttest2(f(target==1),f(target==-1))
 % Get the p-value of the statistic
-p_value = (1-tcdf (t_statistic,2*n1-2))*2
-p_value_orig = (1-tcdf (t_statistic_orig,2*n1-2))*2
+p_value = (1-tcdf (t_statistic,n1+n2-2))*2
+p_value_orig = (1-tcdf (t_statistic_orig,n1+n2-2))*2
 
 
 %% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
@@ -113,12 +121,13 @@ sigma_pooled1 = std(source(target==1));
 sigma_pooled2 = std(source(target==-1));
 
 % Denominator of the original t-stat
-sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+sigma_orig = sqrt(1/n1 + 1/n2) * ...
+             sqrt(((n1-1)*(sigma_pooled1^2))+((n2-1)*(sigma_pooled2^2))/(n1+n2-2));
 
 % Compute the original t-stat
 t_statistic_nomissing = mean_diff/sigma_orig
 % Get the p-value of the statistic
-p_value_nomissing = (1-tcdf (t_statistic_nomissing,2*n1-2))*2
+p_value_nomissing = (1-tcdf (t_statistic_nomissing,n1+n2-2))*2
 
 
 %% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
@@ -130,12 +139,13 @@ sigma_pooled1 = std(source(good_idx1));
 sigma_pooled2 = std(source(good_idx2));
 
 % Denominator of the original t-stat
-sigma_orig = sqrt(2/length(good_idx1)) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+sigma_orig = sqrt(1/n1 + 1/n2) * ...
+             sqrt(((n1-1)*(sigma_pooled1^2))+((n2-1)*(sigma_pooled2^2))/(n1+n2-2));
 
 % Compute the original t-stat
 t_statistic_listwise = mean_diff/sigma_orig
 % Get the p-value of the statistic
-p_value_listwise = (1-tcdf (t_statistic_listwise,2*length(good_idx1)-2))*2
+p_value_listwise = (1-tcdf (t_statistic_listwise,length(good_idx1)+length(good_idx2)-2))*2
 
 
 %% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(m1-nu2)
@@ -149,9 +159,11 @@ sigma_pooled1 = std(s_mean_imput(target==1));
 sigma_pooled2 = std(s_mean_imput(target==-1));
 
 % Denominator of the original t-stat
-sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
+sigma_orig = sqrt(1/n1 + 1/n2) * ...
+             sqrt(((n1-1)*(sigma_pooled1^2))+((n2-1)*(sigma_pooled2^2))/(n1+n2-2));
+
 
 % Compute the original t-stat
 t_statistic_meanimput = mean_diff/sigma_orig
 % Get the p-value of the statistic
-p_value_meanimput = (1-tcdf (t_statistic_meanimput,2*n1-2))*2
+p_value_meanimput = (1-tcdf (t_statistic_meanimput,n1+n2-2))*2

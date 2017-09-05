@@ -160,3 +160,25 @@ sigma_orig = sqrt(2/n1) * sqrt((sigma_pooled1^2+sigma_pooled2^2)/2);
 t_statistic_meanimput = mean_diff/sigma_orig
 % Get the p-value of the statistic
 p_value_meanimput = (1-tcdf (t_statistic_meanimput,2*n1-2))*2
+
+
+%% Compute the difference between the means of the 2 classes (defined by T) for F(H) abs(mu1-mu2)
+% Notice this uses the F(H) “reconstructed” values for all samples, even for non missing data
+mean_diff = abs(mean(f(target==1)) - mean(f(target==-1)));
+
+%% Compute the modify T statistic for fixed A developed by Kristin.
+%sigma_pooled^2 is the pooled within class variance (you may use (sigma1^2 +  sigma2^2)/2 if the classes are balanced)
+cov1 = cov(f(target==1));
+cov2 = cov(f(target==-1));
+
+% Denominator of the modified t-stat
+t_denom=sqrt(cov1/n1 + cov2/n2 + ...
+        ((n1*frac_missing)/n1^2 + (n2*frac_missing)/n2^2)*sum(noise)^2);
+
+% Compute the modified t-stat
+t_statistic_kristin = mean_diff/t_denom
+
+% that should be the same as the one obtained by the matlab version
+%[h0,p,ci,stats] = ttest2(source(target==1),source(target==-1))
+% Get the p-value of the statistic
+p_value_kristin = (1-tcdf (t_statistic_kristin,2*n1-2))*2

@@ -13,41 +13,31 @@ use_spider_clop;
 % variable and the target are significantly dependent. We will use a
 % variant of the T-statistic to measure that dependence.
 
-%H->T->S
+%T  H  S
 
 % All variables have n = n1+n2 values.
+
+% The target variable has n1 examaples of the positive class and n2
+% examples of the negative class.
 n1=50;
 n2=50;
+target = [ones(n1,1); -ones(n2,1)];
 
-% The "source" variable is a Gaussian mixture.
+% The "helper" variable is a Gaussian mixture.
 % The samples for each class are Gaussian distributed with standard 
 % deviations s1 and s2, and means m1 and m2 separated by delta_mu
+alpha2 = 1; % signal to noise ratio
+delta_mu2=1;
+mu2=alpha2*delta_mu2/2;
+s2=delta_mu2;
+helper = [s*randn(n1+n2,1)+mu2];
 
+% The helper variable, correlated with the source, has no missing values
 alpha = 1; % signal to noise ratio
 delta_mu=1;
 mu=alpha*delta_mu/2;
 s=delta_mu;
-helper = [s*randn(n1+n2,1)+mu];
-
-% The target variable has n1 examaples of the positive class and n2
-% examples of the negative class.
-target = ones(n1+n2,1);
-target(find(helper<median(helper))) = -1;
-
-% The "source" variable is a Gaussian mixture.
-% The samples for each class are Gaussian distributed with standard 
-% deviations s1 and s2, and means m1 and m2 separated by delta_mu
-
-alpha = 1; % signal to noise ratio
-delta_mu=1;
-mu1=alpha*delta_mu/2;
-mu2=-alpha*delta_mu/2;
-s1=delta_mu;
-s2=delta_mu;
-source_pos=s1*randn(n1,1)+mu1;
-source_neg=s2*randn(n1,1)+mu2;
-source(find(target==1)) = source_pos;
-source(find(target==-1)) = source_neg;
+source = [s*randn(n1+n2,1)+mu];
 
 % Create the missing data with the same sample size of missing in each class.
 frac_missing = 0.8;
