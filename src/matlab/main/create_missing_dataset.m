@@ -7,7 +7,6 @@ function [ output_args ] = create_missing_dataset( dataset_name, probes, ...
     if (nargin < 2)
         probes = false;
     end
-    % Imputation method
     if (nargin < 3)
         missing_type = {'mcar','mar'};
     end

@@ -4,7 +4,7 @@ function [ output_args ] = restore_dataset( dataset_name, imputation_method )
 
     % Imputation method
     if (nargin < 2)
-        imputation_method = {'median','svd','listwise'};
+        imputation_method = {'med','svd','lwise'};
     end
     
     % Set the dataset folder.
@@ -60,7 +60,7 @@ function [ output_args ] = restore_dataset( dataset_name, imputation_method )
                     data_rest_folder = [perc_dest_fold filesep imputation_method{i}];
                     mkdir(data_rest_folder);
                     % Apply an imputation over the missing data values.
-                    [D_r, Dt_r, Dv_r] = imputation(imputation_method{i}, D_m, Dt_m, Dv_m);
+                    [D_r, Dv_r, Dt_r, error_i] = imputation(imputation_method{i}, D_m, Dv_m, Dt_m);
                     % Save the train data to the files.
                     dlmwrite([data_rest_folder filesep dataset_name '_train.data'], D_r.X, ' ');
                     dlmwrite([data_rest_folder filesep dataset_name '_train.labels'], D_r.Y, ' ');

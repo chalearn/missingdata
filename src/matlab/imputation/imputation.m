@@ -1,11 +1,32 @@
-function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_miss)
-%IMPUTATION Summary of this function goes here
-%   Detailed explanation goes here
+function [D_imp, Dv_imp, Dt_imp, error_i] = imputation(imp_method, D_miss, Dv_miss, Dt_miss)
+%IMPUTATION Imput the values in a missing dataset according to an
+%           imputation method indicated (both train, validation and test).
+% INPUT:
+%   imp_method: Name that represents the imputation method.
+%                   'med'   - median
+%                   'svd'   - svd
+%                   'lreg'  - linear regression
+%                   'corr'  - correlation
+%                   'lwise' - listwise
+%   D_miss:     Data type that represents the missing train dataset that
+%               will be imputed.
+%   Dv_miss:    Data type that represents the missing validation dataset 
+%               that will be imputed.
+%   Dt_miss:    Data type that represents the missing test dataset that
+%               will be imputed.
+% OUTPUT:
+%   D_imp:      Data type that represents the imputed train dataset.
+%   Dv_imp:     Data type that represents the imputed validation dataset.
+%   Dt_imp:     Data type that represents the imputed test dataset.
+%   error_i:    Possible error when the function is executed:
+%                   0 - No error.
+%                   1 - Incorrect number of parameters.
+%                   2 - Incorrect classification method requested.
     
     % Set initial values to return D struct.
-    D_rest = D_miss;
-    Dt_rest = Dt_miss;
-    Dv_rest = Dv_miss;
+    D_imp = D_miss;
+    Dt_imp = Dt_miss;
+    Dv_imp = Dv_miss;
     % Extract the X matrix to work with those data after. 
     X_miss = D_miss.X;
     Xt_miss = Dt_miss.X;
@@ -17,7 +38,7 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
     n = size(X_miss,2);
 
     switch(imp_method)
-        case 'median' % imputation by median value.
+        case 'med' % imputation by median value.
             X_median = nanmedian(X_miss);
             X_median(isnan(X_median)) = 0;
             Xt_median = nanmedian(Xt_miss);
@@ -59,9 +80,9 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
                 Xv_miss(Xv_miss<0)=0;
                 Xv_miss(Xv_miss>999)=999;
             end
-        case 'linear_regression'
+        case 'lreg'
             [p,S,mu] = polyfit(helper(good_idx),source(good_idx),1);
-        case 'correlation'
+        case 'corr'
             miss = isnan(X_miss);
             miss_t = isnan(Xt_miss);
             miss_v = isnan(Xv_miss);
@@ -87,10 +108,10 @@ function [D_rest Dt_rest Dv_rest] = imputation(imp_method, D_miss, Dt_miss, Dv_m
                 pos = imp_posv(~isnan(Xv_miss(f,imp_posv)));
                 Xv_miss(f,c) = Xv_miss(f,pos);
             end
-        case 'listwise' % imputation by list wise deletion
+        case 'lwise' % imputation by list wise deletion
 
     end
-    D_rest.X = X_miss;
-    Dt_rest.X = Xt_miss;
-    Dv_rest.X = Xv_miss;
+    D_imp.X = X_miss;
+    Dt_imp.X = Xt_miss;
+    Dv_imp.X = Xv_miss;
 end

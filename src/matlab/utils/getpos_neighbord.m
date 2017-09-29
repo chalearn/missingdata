@@ -10,7 +10,7 @@ function [ pos_neigh ] = getpos_neighbord( pos_center_pixel, v_type_feat, v_id_p
     [xc yc] = find(m_aux==v_id_pixel(pos_center_pixel));
     inix = xc-ratio;
     finx = xc+ratio;
-    if (xc < ratio)
+    if (xc <= ratio)
         inix = 1;
     else if (xc > x_image_size-ratio)
         finx = x_image_size;
@@ -18,7 +18,7 @@ function [ pos_neigh ] = getpos_neighbord( pos_center_pixel, v_type_feat, v_id_p
     end
     iniy = yc-ratio;
     finy = yc+ratio;
-    if (yc < ratio)
+    if (yc <= ratio)
         iniy = 1;
     else if (yc > y_image_size-ratio)
         finy = y_image_size;
