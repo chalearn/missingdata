@@ -42,6 +42,30 @@ function [ D_miss, Dt_miss, Dv_miss ] = mar( mar_method, mar_percent, D, Dt, Dv,
             M_mar = Dmiss(1:x,:);
             Mt_mar = Dmiss((x+1):(x+y),:);
             Mv_mar = Dmiss((x+y+1):end,:);
+        case 'neigh'
+            v_aux_pix = find(T'==1);
+            v_aux_control = find(T'==-1);
+            % Check if the number of remove pixels is less than the 75
+            % percent of the real number of pixels than must be removed.
+            pixel_miss = size(v_aux_pix,2)*(mar_percent/100)*0.75;
+            real_miss = (size(v_aux_pix,2)+size(v_aux_control,2))*(mar_percent/100);
+            for i=1:t
+                p_rand1 = randperm(length(v_aux_pix));
+                j = 1;
+                while ( ( (sum(Dmiss(i,:)) < real_miss) || ...
+                          (sum(Dmiss(i,v_aux_pix)) < pixel_miss) ) && ...
+                        (j <= length(p_rand1)) )
+                    Dmiss(i,v_aux_pix(p_rand1(j))) = 1;
+                    Dmiss(i,v_aux_control(p_rand1(j))) = 1;
+                    pos_neigh = getpos_neighbord(v_aux_pix(p_rand1(j)), T'==-1, v_aux_pix, 1);
+                    Dmiss(i,pos_neigh) = 1;
+                    Dmiss(i,pos_neigh+size(v_aux_pix,2)) = 1;
+                    j=j+1;
+                end
+            end
+            M_mar = Dmiss(1:x,:);
+            Mt_mar = Dmiss((x+1):(x+y),:);
+            Mv_mar = Dmiss((x+y+1):end,:);
         case 'neigh_and_prod'
             v_aux_pix = find(v_type_feat==0);
             v_aux_prod = find(v_type_feat==1);
