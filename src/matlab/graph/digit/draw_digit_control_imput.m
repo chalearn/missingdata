@@ -1,4 +1,4 @@
-function [ output_args ] = draw_digit_control(D, D_miss, rank_list)
+function [ output_args ] = draw_digit_control_imput(D, D_miss, rank_list)
 % M=browse_digit(X,Y,F)
 % Browse through a digit database
 % X -- Matrix with digits in lines
@@ -57,7 +57,7 @@ while 1
 %       M3=zeros(1,28*28);
 %       M3(feat_idx)=D_mcar.X(num,feat_loc);
 %   else
-        M_o = D.X(num,:);
+        M_o = D.X(num,1:end/2);
         M_o_miss = isnan(X_miss(num,1:end/2));
         M_p = X_miss(num,(end/2)+1:end);
         M_p_miss = isnan(X_miss(num,(end/2)+1:end));
