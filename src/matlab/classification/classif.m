@@ -6,10 +6,10 @@ function [ train_mod, train_r, valid_r, test_r, precis_r, recall_r , error_cl] .
 %   cl_method:  number that represents the classification method.
 %                   1 - kridge
 %   D_cl:       Data type that represents the dataset that will be classified.
-%   Dt_cl:      Data type that represents the dataset that will be used to
-%               perform the test.
 %   Dv_cl:      Data type that represents the dataset that will be used to
 %               perform the validation.
+%   Dt_cl:      Data type that represents the dataset that will be used to
+%               perform the test.
 %   T_cl:       Array of target values.
 %   id_fs:      Cell array with subsets of relevant features.
 % OUTPUT:
@@ -22,8 +22,7 @@ function [ train_mod, train_r, valid_r, test_r, precis_r, recall_r , error_cl] .
 %   error_fs:   Possible error when the function is executed:
 %                   0 - No error.
 %                   1 - Incorrect number of parameters.
-%                   2 - Incorrect feature selection method requested.
-%                   3 - Incorrect threshold method requested.
+%                   2 - Incorrect classification method requested.
 
 % Set the initial value of return variables.
 train_r = [];
@@ -40,17 +39,20 @@ flag_test = 0;
 flag_prec_recall = 0;
 flag_fs = 0;
 
-% Check the number of parameters
+% Check the number of parameters.
 if (nargin<2)
     error_cl = 1;
 else
     if (nargin > 2)
         flag_valid = 1;
-    elseif (nargin > 3)
+    end
+    if (nargin > 3)
         flag_test = 1;
-    elseif (nargin > 4)
+    end
+    if (nargin > 4)
         flag_prec_recall = 1;
-    elseif (nargin > 5)
+    end
+    if (nargin > 5)
         flag_fs = 1;
     end
     
@@ -71,7 +73,7 @@ else
         recall_r = zeros(1,length(id_fs));
     end
 
-    % Select classifier method
+    % Select classifier method.
     switch(cl_method)
         case 1 % kridg method
             my_cl_method=kridge;
@@ -87,7 +89,6 @@ else
                 [train_r{i}, train_mod{i}] = train(my_cl_method, D_train);
                 %rv_listwise = find(~sum(isnan(Dv.X(:, fid{i})),2));
                 %D_valid = data(Dv.X(rv_listwise,fid{i}), Dv.Y(rv_listwise,:));
-                
                 if (flag_valid)
                     D_valid = data(Dv_cl.X(:,id_fs{i}), Dv_cl.Y);
                     valid_r{i} = test(train_mod{i}, D_valid);
@@ -108,7 +109,11 @@ else
             end
         end
         train_r = train_r(1:length(find(~cellfun(@isempty,train_r))));
-        valid_r = valid_r(1:length(find(~cellfun(@isempty,valid_r))));
-        test_r = test_r(1:length(find(~cellfun(@isempty,test_r))));
+        if (flag_valid)
+            valid_r = valid_r(1:length(find(~cellfun(@isempty,valid_r))));
+        end
+        if (flag_test)
+            test_r = test_r(1:length(find(~cellfun(@isempty,test_r))));
+        end
     end
 end
