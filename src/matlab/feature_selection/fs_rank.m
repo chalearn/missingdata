@@ -18,15 +18,17 @@ function [ id_fs, size_fs, error_fs ] = fs_rank( fs_method, th_method, D_fs)
 %                   2 - Incorrect feature selection method requested.
 %                   3 - Incorrect threshold method requested.
 
-% Check the number of parameters
+% Set the initial value of return variables.
 id_fs = [];
 size_fs = [];
 error_fs = 0;
+
+% Check the number of parameters.
 if (nargin<3)
     error_fs = 1;
 else
     N = size(D_fs.X,2);
-    % Apply a feature selection method
+    % Apply a feature selection method.
     switch(fs_method)
         case 1 % s2n method
             % Ordered all the features of the dataset.
@@ -44,28 +46,26 @@ else
         otherwise
             error_fs = 2;
     end
-    % Apply a threshold method    
+    % Apply a threshold method.
     switch (th_method)
-        case 1 % log2 threshold
+        case 1 % log2 threshold.
             nmax = floor(log2(N));
             size_fs = 2.^(0:nmax);
         otherwise
             error_fs = 3;
     end
     if (~error_fs)
-        % Add the total of features to the list
+        % Add the total of features to the list.
         if (nmax~=N)
             size_fs = [size_fs N];
         end
 
-        % Obtain the different rankings of relevance
+        % Obtain the different rankings of relevance.
         id_fs = cell(1,length(size_fs));
         for i=1:length(size_fs)
             aux_fn = size_fs(i);
-            % Indices of selected features
+            % Indices of selected features.
             id_fs{i} = fpos(1:aux_fn);
         end
     end
 end
-
-
