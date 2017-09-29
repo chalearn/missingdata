@@ -51,16 +51,16 @@ function [ output_args ] = restore_dataset( dataset_name, imputation_method )
                 mkdir(perc_dest_fold);
 
                 % Load the missing dataset, divided in train, test, validation, ...
-                [D_m Dt_m Dv_m F_m T_m] = ...
+                [D_m, Dv_m, Dt_m, F_m, T_m, error_ld] = ...
                             load_dataset(perc_orig_fold, data_train_name, ...
-                                        data_test_name, data_valid_name, ...
+                                        data_valid_name, data_test_name, ...
                                         data_feat_name);
 
                 for i=1:length(imputation_method)
                     data_rest_folder = [perc_dest_fold filesep imputation_method{i}];
                     mkdir(data_rest_folder);
                     % Apply an imputation over the missing data values.
-                    [D_r Dt_r Dv_r] = imputation(imputation_method{i}, D_m, Dt_m, Dv_m);
+                    [D_r, Dt_r, Dv_r] = imputation(imputation_method{i}, D_m, Dt_m, Dv_m);
                     % Save the train data to the files.
                     dlmwrite([data_rest_folder filesep dataset_name '_train.data'], D_r.X, ' ');
                     dlmwrite([data_rest_folder filesep dataset_name '_train.labels'], D_r.Y, ' ');

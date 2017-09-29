@@ -55,8 +55,9 @@ imputation_folder = [aux_folder filesep imput_method];
 mkdir(imputation_folder);
 
 % Load the dataset, divided in train, test, validation, ...
-[D Dt Dv F T] = load_dataset(dataset_folder, data_train_name, data_test_name, ...
-                             data_valid_name, data_feat_name);
+[D, Dv, Dt, F, T, error_ld] = ...
+    load_dataset(dataset_folder, data_train_name, data_valid_name, ...
+                 data_test_name, data_feat_name);
 % Take a look at the digits
 %M=browse_digit(X,Y,F);
 % Note: If you use the plain Gisette_noprobe, do niot load F and use
@@ -85,10 +86,11 @@ for p=1:length(mcar_p)
     %M=draw_digit(D, M_mcar, D_mcar);
 
     % Feature selection process.
-    [rank_list num_feats] = fs_rank(1, 1, D_mcar, Dt_mcar, Dv_mcar);
-    % Classification with the different feature subsets. 
-    [train_r, valid_r, test_r, train_mod, prec_r, recall_r] = ...
-                        classif(1, D_mcar, Dt_mcar, Dv_mcar, F, T, rank_list);
+    [rank_list, num_feats, fs_error] = fs_rank(1, 1, D_mcar);
+    % Classification with the different feature subsets.
+    
+    [train_mod, train_r, valid_r, test_r, prec_r, recall_r, error_cl] = ...
+                        classif(1, D_mcar, Dv_mcar, Dt_mcar, T, rank_list);
     % Obtain the different plots for the validation subset.
     [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
                         get_plot(valid_r, prec_r, recall_r, num_feats);
