@@ -1,9 +1,46 @@
 function [ output_args ] = create_missing_dataset( dataset_name, probes, ...
                                         missing_type, missing_method, ...
                                         missing_percentage )
-%CREATE_MISSING_DATASET Summary of this function goes here
-%   Detailed explanation goes here
 
+%CREATE_MISSING Create a dataset with missing values from full dataset.
+% INPUT:
+%   fold_root_data:     Path of the dataset root folder.
+%   file_name_train:    Name of the train file.
+%   file_name_valid:    Name of the validation file.
+%   file_name_test:     Name of the test file.
+%   file_name_probes:   Name of the probes file.
+% OUTPUT:
+%   D:          Data type that represents the dataset that will be classified.
+%   Dv:         Data type that represents the dataset that will be used to
+%               perform the validation.
+%   Dt:         Data type that represents the dataset that will be used to
+%               perform the test.
+%   F:          
+%   T:          Array of target values.
+%   error_ld:   Possible error when the function is executed:
+%                   0 - No error.
+%                   1 - Incorrect number of parameters.
+%                   2 - Incorrect root folder path.
+%                   3 - Some file does not exist.
+
+% Set the initial value of return variables.
+D = [];
+Dv = [];
+Dt = [];
+F = [];
+T = [];
+error_ld = 0;
+
+% Check the number of parameters.
+if (nargin<2)
+    error_ld = 1;
+else
+    if (isempty(fold_root_data))
+        error_ld = 2;
+    else
+        if (nargin>1 && ~isempty(file_name_train))
+                                    
+                                    
     if (nargin < 2)
         probes = false;
     end
