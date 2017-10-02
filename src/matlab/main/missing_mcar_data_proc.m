@@ -14,10 +14,9 @@ dataset_orig_type = 'orig_dataset';
 % Set the dataset folder.
 dataset_type = 'miss';
 % Imputation method
-missingness = 'mcar_flipcoin';
-imput = 'svd';
-miss_method = ['miss_by_' missingness];
-imput_method = ['imput_by_' imput];
+miss_type = 'mcar';
+miss_meth = 'flipcoin'; %{'flipcoin'};
+imput_meth = 'svd';
 
 mcar_p = [0, 10, 20, 40, 80];
 
@@ -38,9 +37,9 @@ dataset_folder = [datadir filesep dataset_orig_type filesep dataset_name];
 % Create a folder to save the different graphs of the dataset.
 aux_folder = [graphsdir filesep dataset_name];
 mkdir(aux_folder);
-aux_folder2 = [aux_folder filesep miss_method];
+aux_folder2 = [aux_folder filesep miss_meth];
 mkdir(aux_folder2);
-graphs_folder = [aux_folder2 filesep imput_method];
+graphs_folder = [aux_folder2 filesep imput_meth];
 mkdir(graphs_folder);
 aulc_folder = [graphs_folder filesep 'aulc_' dataset_type];
 mkdir(aulc_folder);
@@ -49,9 +48,9 @@ mkdir(aupr_folder);
 % Create a folder to save the info of the dataset.
 results_folder = [resultsdir filesep dataset_name];
 mkdir(results_folder);
-aux_folder = [results_folder filesep miss_method];
+aux_folder = [results_folder filesep miss_meth];
 mkdir(aux_folder);
-imputation_folder = [aux_folder filesep imput_method];
+imputation_folder = [aux_folder filesep imput_meth];
 mkdir(imputation_folder);
 
 % Load the dataset, divided in train, test, validation, ...
@@ -78,19 +77,20 @@ for p=1:length(mcar_p)
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_' dataset_type '_' num2str(miss_perc)];
     mkdir(auroc_by_fs_folder);
     % Apply MCAR missing data on the dataset.
-    [M_mcar Mt_mcar Mv_mcar] = mcar(missingness, miss_perc, D, Dt, Dv);
+    [D_miss, Dt_miss, Dv_miss] = missing_data( miss_type, miss_meth, ...
+                                               miss_perc, D, Dt, Dv, F, T );
     % Apply an imputation over the missing data values.
-    [D_mcar Dt_mcar Dv_mcar] = imputation(imput, D, Dt, Dv, M_mcar, Mt_mcar, Mv_mcar);
+    [D_imp, Dv_imp, Dt_imp, error_i] = imputation(imput_meth, D_miss, Dv_miss, Dt_miss);
     
     % See the picture of numbers (original / missing / imputation)
     %M=draw_digit(D, M_mcar, D_mcar);
 
     % Feature selection process.
-    [rank_list, num_feats, fs_error] = fs_rank(1, 1, D_mcar);
+    [rank_list, num_feats, fs_error] = fs_rank(1, 1, D_imp);
     % Classification with the different feature subsets.
     
     [train_mod, train_r, valid_r, test_r, prec_r, recall_r, error_cl] = ...
-                        classif(1, D_mcar, Dv_mcar, Dt_mcar, T, rank_list);
+                        classif(1, D_imp, Dv_imp, Dt_imp, T, rank_list);
     % Obtain the different plots for the validation subset.
     [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
                         get_plot(valid_r, prec_r, recall_r, num_feats);
