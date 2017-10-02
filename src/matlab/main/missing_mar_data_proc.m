@@ -78,7 +78,7 @@ for p=1:length(mar_p)
     auroc_by_fs_folder = [graphs_folder filesep 'auroc_' dataset_type '_' num2str(miss_perc)];
     mkdir(auroc_by_fs_folder);
     % Apply MAR missing data on the dataset.
-    [D_miss, Dt_miss, Dv_miss] = missing_data( miss_type, miss_meth, ...
+    [D_miss, Dt_miss, Dv_miss] = create_missing( miss_type, miss_meth, ...
                                                miss_perc, D, Dt, Dv, F, T );
     % Apply an imputation over the missing data values.
     [D_imp, Dv_imp, Dt_imp, error_i] = imputation(imput_meth, D_miss, Dv_miss, Dt_miss);
