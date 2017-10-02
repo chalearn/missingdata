@@ -1,5 +1,5 @@
-function [ train_mod, train_r, valid_r, test_r, precis_r, recall_r , error_cl] ...
-                                = classif(cl_method, D_cl, Dv_cl, Dt_cl, T_cl, id_fs)
+function [ train_mod, train_r, valid_r, test_r, precis_r, recall_r , error_cl] = ...
+                                classif(cl_method, D_cl, Dv_cl, Dt_cl, T_cl, id_fs)
 %CLASSIF Obtain the results of make the classification process over a dataset
 %        (both training and test).
 % INPUT:

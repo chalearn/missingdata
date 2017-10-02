@@ -1,5 +1,5 @@
 function [ D_miss, Dv_miss, Dt_miss, error_m] = ...
-                    mcar( mcar_meth, mcar_perc, D, Dv, Dt );
+                    mcar( mcar_meth, mcar_perc, D, Dv, Dt )
 %MCAR   Generate the missing values in a dataset according to MCAR method 
 %       indicated (both train, validation and test).
 % INPUT:

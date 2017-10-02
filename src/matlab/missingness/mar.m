@@ -1,5 +1,5 @@
 function [ D_miss, Dv_miss, Dt_miss, error_m ] = ...
-                        mar( mar_meth, mar_perc, D, Dv, Dt, F, T);
+                        mar( mar_meth, mar_perc, D, Dv, Dt, F, T)
 %MAR    Generate the missing values in a dataset according to MAR method 
 %       indicated (both train, validation and test).
 % INPUT:
@@ -67,7 +67,7 @@ else
     end
     
     Dmiss = zeros(samp,n);
-    [v_type_feat v_id_pixel v_prod] = getv_inffeature(F);
+    [v_type_feat, v_id_pixel, v_prod] = getv_inffeature(F);
 
     switch (mar_meth)
         case 'prod' % MCAR on pixels and then delete the prods of the missing pixel.
