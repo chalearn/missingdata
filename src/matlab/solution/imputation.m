@@ -7,7 +7,6 @@ function [D_imp, Dv_imp, Dt_imp, error_i] = imputation(imp_method, D_miss, Dv_mi
 %                   'svd'   - svd
 %                   'lreg'  - linear regression
 %                   'corr'  - correlation
-%                   'lwise' - listwise
 %   D_miss:     Data type that represents the missing train dataset that
 %               will be imputed.
 %   Dv_miss:    Data type that represents the missing validation dataset 
@@ -21,7 +20,7 @@ function [D_imp, Dv_imp, Dt_imp, error_i] = imputation(imp_method, D_miss, Dv_mi
 %   error_i:    Possible error when the function is executed:
 %                   0 - No error.
 %                   1 - Incorrect number of parameters.
-%                   2 - Incorrect imputation method requested.
+%                   3 - Incorrect imputation method requested.
 
 % Set the initial value of return variables.
 D_imp = [];
@@ -150,9 +149,8 @@ else
                     Xt_miss(f,c) = Xt_miss(f,pos);
                 end             
             end
-        case 'lwise' % imputation by list wise deletion
         otherwise
-            error_i = 2;
+            error_i = 3;
     end
     D_imp.X = X_miss;
     if (flag_valid)
