@@ -19,7 +19,8 @@ function [ D, Dv, Dt, F, T, error_ld ] = load_dataset( fold_root_data, ...
 %   error_ld:   Possible error when the function is executed:
 %                   0 - No error.
 %                   1 - Incorrect number of parameters.
-%                   2 - Some file does not exist.
+%                   2 - Incorrect root folder path.
+%                   3 - Some file does not exist.
 
 % Set the initial value of return variables.
 D = [];
@@ -33,51 +34,55 @@ error_ld = 0;
 if (nargin<2)
     error_ld = 1;
 else
-    if (nargin>1)
-        dx_file_name = [fold_root_data filesep file_name_train '.data'];
-        dy_file_name = [fold_root_data filesep file_name_train '.labels'];
-        if (exist(dx_file_name, 'file') == 2) && exist(dy_file_name, 'file') == 2
-            X=load(dx_file_name);
-            Y=load(dy_file_name);
-            D = data (X, Y);
-        else
-            error_ld = 2;
+    if (isempty(fold_root_data))
+        error_ld = 2;
+    else
+        if (nargin>1 && ~isempty(file_name_train))
+            dx_file_name = [fold_root_data filesep file_name_train '.data'];
+            dy_file_name = [fold_root_data filesep file_name_train '.labels'];
+            if (exist(dx_file_name, 'file') == 2) && exist(dy_file_name, 'file') == 2
+                X=load(dx_file_name);
+                Y=load(dy_file_name);
+                D = data (X, Y);
+            else
+                error_ld = 3;
+            end
         end
-    end
-    if (nargin>2)
-        dvx_file_name = [fold_root_data filesep file_name_valid '.data'];
-        dvy_file_name = [fold_root_data filesep file_name_valid '.labels'];
-        if (exist(dvx_file_name, 'file') == 2) && exist(dvy_file_name, 'file') == 2            
-            Xv=load();
-            Yv=load();
-            Dv = data (Xv, Yv);
-        else
-            error_ld = 2;
+        if (nargin>2 && ~isempty(file_name_valid))
+            dvx_file_name = [fold_root_data filesep file_name_valid '.data'];
+            dvy_file_name = [fold_root_data filesep file_name_valid '.labels'];
+            if (exist(dvx_file_name, 'file') == 2) && exist(dvy_file_name, 'file') == 2            
+                Xv=load();
+                Yv=load();
+                Dv = data (Xv, Yv);
+            else
+                error_ld = 3;
+            end
         end
-    end
-    if (nargin>3)
-        dtx_file_name = [fold_root_data filesep file_name_test '.data'];
-        dty_file_name = [fold_root_data filesep file_name_test '.labels'];
-        if (exist(dtx_file_name, 'file') == 2) && exist(dty_file_name, 'file') == 2            
-            Xt=load(dtx_file_name);
-            Yt=load(dty_file_name);
-            Dt = data (Xt, Yt);
-        else
-            error_ld = 2;
+        if (nargin>3 && ~isempty(file_name_test))
+            dtx_file_name = [fold_root_data filesep file_name_test '.data'];
+            dty_file_name = [fold_root_data filesep file_name_test '.labels'];
+            if (exist(dtx_file_name, 'file') == 2) && exist(dty_file_name, 'file') == 2            
+                Xt=load(dtx_file_name);
+                Yt=load(dty_file_name);
+                Dt = data (Xt, Yt);
+            else
+                error_ld = 3;
+            end
         end
-    end
-    if (nargin>4)
-        f_file_name = [fold_root_data filesep file_name_probes '.info'];
-        if (exist(f_file_name, 'file') == 2)
-            F=read_label(f_file_name); % Know the identity of the probes
-        else
-            error_ld = 2;
-        end
-        t_file_name = [fold_root_data filesep file_name_probes '.labels'];
-        if (exist(t_file_name, 'file') == 2)
-            T=load(t_file_name); % +1 for a real feature; -1 for a probe
-        else
-            error_ld = 2;
+        if (nargin>4 && ~isempty(file_name_probes))
+            f_file_name = [fold_root_data filesep file_name_probes '.info'];
+            if (exist(f_file_name, 'file') == 2)
+                F=read_label(f_file_name); % Know the identity of the probes
+            else
+                error_ld = 3;
+            end
+            t_file_name = [fold_root_data filesep file_name_probes '.labels'];
+            if (exist(t_file_name, 'file') == 2)
+                T=load(t_file_name); % +1 for a real feature; -1 for a probe
+            else
+                error_ld = 3;
+            end
         end
     end
 end
