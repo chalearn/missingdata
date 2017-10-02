@@ -4,7 +4,7 @@ function [ train_mod, train_r, valid_r, test_r, precis_r, recall_r , error_cl] =
 %        (both training and test).
 % INPUT:
 %   cl_method:  number that represents the classification method.
-%                   1 - kridge
+%                   'kridge'    - kridge
 %   D_cl:       Data type that represents the dataset that will be classified.
 %   Dv_cl:      Data type that represents the dataset that will be used to
 %               perform the validation.
@@ -75,7 +75,7 @@ else
 
     % Select classifier method.
     switch(cl_method)
-        case 1 % kridg method
+        case 'kridge' % kridg method
             my_cl_method=kridge;
         otherwise
             error_cl = 2;

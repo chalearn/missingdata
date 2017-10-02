@@ -1,6 +1,5 @@
 function [ output_args ] = analyze_dataset( dataset_name )
-%ANALYZE_DATASET Summary of this function goes here
-%   Detailed explanation goes here
+%ANALYZE_DATASET 
     
     % Set the name of dataset folder.
     name_orig_folder = 'orig_dataset';
@@ -24,11 +23,10 @@ function [ output_args ] = analyze_dataset( dataset_name )
     data_miss_folder = [datadir filesep name_miss_folder filesep dataset_name];
     data_rest_folder = [datadir filesep name_rest_folder filesep dataset_name];
     
-
     % Load the origin dataset, divided in train, test, validation, ...
-    [D_o, Dv_o, Dt_o, F_o, T_o, error_ld] = load_dataset(data_orig_folder, data_train_name, ...
-                                           data_valid_name, data_test_name, ...
-                                           data_feat_name);
+    [D_o, Dv_o, Dt_o, F_o, T_o, error_ld] = ...
+            load_dataset( data_orig_folder, data_train_name, data_valid_name, ...
+                          data_test_name, data_feat_name);
     
     % Create folders to save the graphs and results.
     graphs_dest_folder = [graphsdir filesep dataset_name];
@@ -74,10 +72,10 @@ function [ output_args ] = analyze_dataset( dataset_name )
                                                  data_train_name, data_valid_name, ...
                                                  data_test_name, data_feat_name);
                     % Feature selection process.
-                    [rank_list, num_feats, fs_error] = fs_rank( 2, 1, D_r);
+                    [rank_list, num_feats, fs_error] = fs_rank( 'ttest', 'log2', D_r);
                     % Classification with the different feature subsets. 
                     [train_mod, train_r, valid_r, test_r, prec_r, recall_r] = ...
-                                        classif(1, D_r, Dv_r, Dt_r, T_r, rank_list);
+                                        classif('kridge', D_r, Dv_r, Dt_r, T_r, rank_list);
                     % Obtain the different plots for the validation subset.
                     [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
                                         get_plot(valid_r, prec_r, recall_r, num_feats);

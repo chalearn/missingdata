@@ -52,8 +52,8 @@ else
             dvx_file_name = [fold_root_data filesep file_name_valid '.data'];
             dvy_file_name = [fold_root_data filesep file_name_valid '.labels'];
             if (exist(dvx_file_name, 'file') == 2) && exist(dvy_file_name, 'file') == 2            
-                Xv=load();
-                Yv=load();
+                Xv=load(dvx_file_name);
+                Yv=load(dvy_file_name);
                 Dv = data (Xv, Yv);
             else
                 error_ld = 3;

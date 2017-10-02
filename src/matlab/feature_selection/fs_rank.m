@@ -3,10 +3,10 @@ function [ id_fs, size_fs, error_fs ] = fs_rank( fs_method, th_method, D_fs)
 %method selected and the threshold.
 % INPUT:
 %   fs_method:  Number that represents the FS method.
-%                   1 - s2n
-%                   2 - ttest
+%                   's2n'   - s2n
+%                   'ttest' - ttest
 %   th_method:  Number that represents the threshold method.
-%                   1 - log2n
+%                   'log2'  - log2n
 %   D_fs:       Data type that represents the dataset to be analyzed.
 % OUTPUT:
 %   id_fs:      Id of the features ordered according to their relevance.
@@ -30,11 +30,11 @@ else
     N = size(D_fs.X,2);
     % Apply a feature selection method.
     switch(fs_method)
-        case 1 % s2n method
+        case 's2n' % s2n method
             % Ordered all the features of the dataset.
             [~, selected_features] = train(s2n, D_fs);
             fpos = selected_features.fidx;
-        case 2 % t-test method
+        case 'ttest' % t-test method
             % Ordered all the features of the dataset.
             tvalue=zeros(1,N);
             for f=1:N
@@ -48,7 +48,7 @@ else
     end
     % Apply a threshold method.
     switch (th_method)
-        case 1 % log2 threshold.
+        case 'log2' % log2 threshold.
             nmax = floor(log2(N));
             size_fs = 2.^(0:nmax);
         otherwise
