@@ -7,6 +7,7 @@ function [ D_miss, Dv_miss, Dt_miss, error_m ] = ...
 %   miss_type:  Name that represents the missingnes type.
 %                   'mcar'  - mcar
 %                   'mar'   - mar
+%                   'mnar'  - mnar
 %   miss_meth:  Name that represents the missingnes method within the 
 %               missingnes type (For more information look at the definition
 %               of each missing function).
@@ -40,10 +41,9 @@ else
         case 'mcar'
             [D_miss, Dv_miss, Dt_miss, error_m] = mcar(miss_meth, miss_perc, D, Dv, Dt);
         case 'mar'
-            [D_miss, Dv_miss, Dt_miss, error_m] = mar(miss_meth, miss_perc, D, Dv, Dv, F, T);
+            [D_miss, Dv_miss, Dt_miss, error_m] = mar(miss_meth, miss_perc, D, Dv, Dt, F, T);
         case 'mnar'
         otherwise
             error_m = 2;
     end
 end
-

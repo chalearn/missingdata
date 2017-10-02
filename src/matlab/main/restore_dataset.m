@@ -1,12 +1,38 @@
-function [ output_args ] = restore_dataset( dataset_name, imputation_method )
-%RESTORE_ Summary of this function goes here
-%   Detailed explanation goes here
+function [ error_rd ] = ...
+    restore_dataset( dataset_name, solution_type, solution_method )
+%RESTORE_DATASET Restore a missing values dataset.
+% INPUT:
+%   dataset_name:   Name of the dataset.
+%   solution_type:  Cell array with the name of solution types.
+%   solution_meth:  Cell array with the name of solution methods.
+% OUTPUT:
+%   error_rd:       Possible error when the function is executed:
+%                       0 - No error.
+%                       1 - Incorrect number of parameters.
+%                       2 - Incorrect dataset name.
 
-    % Imputation method
-    if (nargin < 2)
-        imputation_method = {'med','svd','lwise'};
+% Set the initial value of return variables.
+error_rd = 0;
+
+% Check the number of parameters.
+if (nargin<1)
+    error_rd = 1;
+elseif (isempty(dataset_name))
+    error_rd = 2;
+else
+    if (nargin<2 || isempty(solution_type))
+        solution_type = {'del','imp'};
     end
-    
+    if (nargin<3 || isempty(solution_method))
+        del_t = {};%{'lwise', 'pwise'};
+        imp_t = {'med','svd'};%,'lreg','corr'};
+        solution_method = cell(2,2);
+        solution_method{1,1} = 'del';
+        solution_method{2,1} = 'imp';
+        solution_method{1,2} = del_t;
+        solution_method{2,2} = imp_t;
+    end
+
     % Set the dataset folder.
     dataset_orig_folder = 'miss_dataset';
     % Set the dataset folder.
@@ -55,26 +81,20 @@ function [ output_args ] = restore_dataset( dataset_name, imputation_method )
                             load_dataset(perc_orig_fold, data_train_name, ...
                                         data_valid_name, data_test_name, ...
                                         data_feat_name);
-
-                for i=1:length(imputation_method)
-                    data_rest_folder = [perc_dest_fold filesep imputation_method{i}];
-                    mkdir(data_rest_folder);
-                    % Apply an imputation over the missing data values.
-                    [D_r, Dv_r, Dt_r, error_i] = imputation(imputation_method{i}, D_m, Dv_m, Dt_m);
-                    % Save the train data to the files.
-                    dlmwrite([data_rest_folder filesep dataset_name '_train.data'], D_r.X, ' ');
-                    dlmwrite([data_rest_folder filesep dataset_name '_train.labels'], D_r.Y, ' ');
-                    % Save the test data to the files.
-                    dlmwrite([data_rest_folder filesep dataset_name '_test.data'], Dt_r.X, ' ');
-                    dlmwrite([data_rest_folder filesep dataset_name '_test.labels'], Dt_r.Y, ' ');
-                    % Save the validation data to the files.
-                    dlmwrite([data_rest_folder filesep dataset_name '_valid.data'], Dv_r.X, ' ');
-                    dlmwrite([data_rest_folder filesep dataset_name '_valid.labels'], Dv_r.Y, ' ');
-                    % Save the feat data to the files.
-                    fileID = fopen([data_rest_folder filesep dataset_name '_feat.info'],'w');
-                    fprintf(fileID,'%s\n', F_m{:});
-                    fclose(fileID);
-                    dlmwrite([data_rest_folder filesep dataset_name '_feat.labels'], T_m, ' ');
+                for t=1:length(solution_type)
+                    data_solv_folder = [perc_dest_fold filesep solution_type{t}];
+                    mkdir(data_solv_folder);
+                    for i=1:length(solution_method)
+                        data_rest_folder = [data_solv_folder filesep solution_method{i}];
+                        mkdir(data_rest_folder);
+                        % Apply an imputation over the missing data values.
+                        [D_s, Dv_s, Dt_s, error_s] = ...
+                                    solve_missing(solution_type{t}, solution_method{i}, D_m, Dv_m, Dt_m);
+                        % Save dataset to the files.
+                        [pftrain, pfvalid, pftest, pfprob, error_sd] = ...
+                                    store_dataset( data_rest_folder, dataset_name, ...
+                                                   D_s, Dv_s, Dt_s, F_m, T_m);
+                    end
                 end
             end
         end
