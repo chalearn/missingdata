@@ -1,8 +1,8 @@
 function [ D_miss, Dv_miss, Dt_miss, error_m ] = ...
-                        missing_data( miss_type, miss_meth, ...
+                        create_missing( miss_type, miss_meth, ...
                                       miss_perc, D, Dv, Dt, F, T )
-%MISSING_DATA Generate the missing values in a dataset according to an
-%             missingness method indicated (both train, validation and test).
+%CREATE_MISSING Generate the missing values in a dataset according to an
+%               missingness method indicated (both train, validation and test).
 % INPUT:
 %   miss_type:  Name that represents the missingnes type.
 %                   'mcar'  - mcar
