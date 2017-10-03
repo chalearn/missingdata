@@ -11,7 +11,7 @@ function h=overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-style_list = {'-r','--r',':r','-.r','-b','--b',':b','-.b'};
+style_list = {'-r',':b','-m',':r','-b',':m'};
 
 if nargin<8 || isempty(old_h);
     h=figure;

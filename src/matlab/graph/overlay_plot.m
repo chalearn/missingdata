@@ -1,4 +1,4 @@
-function [ output_args ] = overlay_plot( dataset_name )
+function [ output_args ] = overlay_plot( fs_method, dataset_name )
 %OVERLAY_PLOT Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,11 +6,11 @@ function [ output_args ] = overlay_plot( dataset_name )
     utils_dir = ['..' filesep 'utils'];
     addpath(utils_dir);
     % Obtain the dir of each relevant folder in the repository.
-    [rootdir datadir graphsdir srcdir resultsdir] = load_path();
+    [~, ~, graphsdir, ~, resultsdir] = load_path();
     
     % Obtain the dataset folder.
-    result_folder = [resultsdir filesep dataset_name];
-    graphs_folder = [graphsdir filesep dataset_name];
+    result_folder = [resultsdir filesep fs_method filesep dataset_name];
+    graphs_folder = [graphsdir filesep fs_method filesep dataset_name];
     
     aux_folds = dir(result_folder);
     miss_type_fold = aux_folds(3:end);
@@ -31,7 +31,7 @@ function [ output_args ] = overlay_plot( dataset_name )
                 aux_folds = dir([result_folder filesep percent_subroute_fold]);
                 miss_impt_fold = aux_folds(3:end);
                 percent_list{1,p} = [miss_perc_fold(p).name ' %'];
-                if ( p == 1)
+                if (p == 1)
                     imput_list = {miss_impt_fold(:).name}';
                     h_aupr_array = cell(length(miss_impt_fold),length(miss_perc_fold));
                     h_aulc_array = cell(length(miss_impt_fold),length(miss_perc_fold));

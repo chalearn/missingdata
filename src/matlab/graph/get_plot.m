@@ -1,8 +1,26 @@
-function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
+function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR, error_gp ] = ...
                             get_plot( test_r, prec_r, recall_r, num_feats )
-%GET_PLOT Summary of this function goes here
-%   Detailed explanation goes here
+%GET_PLOT Obtain the different plots of a training-test results.
+% INPUT:
+%   test_r:         
+%   prec_r:         
+%   recall_r:       
+%   num_feats:      
+% OUTPUT:
+%   cell_h_auroc:   
+%   h_auroc:        
+%   h_aulc: 
+%   h_aupr:
+%   auc_va:
+%   AULC:
+%   AUPR:
+%   error_gp:       Possible error when the function is executed:
+%                       0 - No error.
+%                       1 - Incorrect number of parameters.
+%                       2 - Incorrect feature selection method requested.
+%                       3 - Incorrect threshold method requested.
 
+    error_gp = 0;
     num_plots = length(test_r);
 
     if (num_plots > 0)
@@ -38,7 +56,7 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
     AULC = alc(num_feats(1:length(auc_va)), auc_va);
     h_aulc=plot_learning_curve('Learning curve', AULC, num_feats(1:length(auc_va)), auc_va, sigma_va);
     %fprintf('+++ Area under the learnign curve AULC = %5.4f +++\n', AULC);
-        
+    
     % Measure the discovery power with AUPR
     % Precision-recall curve (we use the same code...)
     AUPR = aupr(recall_r, prec_r);
