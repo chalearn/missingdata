@@ -25,7 +25,7 @@ else
     if (nargin<2 || isempty(missing_type))
         missing_type = {'mcar','mar'};
     end
-    if (nargin<3 || isempty(solution_method))
+    if (nargin<3 || isempty(missing_meth))
         mcar_t = {'flipcoin'};
         mar_t = {'prod','neigh_and_prod','neigh_and_prod_corr','top_image'};
         mnar_t = {''};
@@ -96,7 +96,7 @@ else
                 end
                 % Save dataset to the files.
                 [pftrain, pfvalid, pftest, pfprob, error_sd] = ...
-                            store_dataset( data_rest_folder, dataset_name, ...
+                            store_dataset( data_miss_perc_folder, dataset_name, ...
                                            D_m, Dv_m, Dt_m, F, T);
             end
         end

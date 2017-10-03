@@ -72,12 +72,15 @@ function [ output_args ] = analyze_dataset( dataset_name )
                                                  data_train_name, data_valid_name, ...
                                                  data_test_name, data_feat_name);
                     % Feature selection process.
-                    [rank_list, num_feats, fs_error] = fs_rank( 'ttest', 'log2', D_r);
-                    % Classification with the different feature subsets. 
-                    [train_mod, train_r, valid_r, test_r, prec_r, recall_r] = ...
-                                        classif('kridge', D_r, Dv_r, Dt_r, T_r, rank_list);
+                    [rank_list, num_feats, fs_error] = fs_rank('s2n', 'log2', D_r);
+                    % Classification with the different feature subsets.
+                    [train_mod, train_r, valid_r, test_r, error_c] = ...
+                                        classif('kridge', D_r, Dv_r, Dt_r, rank_list);
+                    % Obtain the precission and recall values.
+                    [prec_r, error_m] = measures('prec', T_r, rank_list);
+                    [recall_r, error_m] = measures('rec', T_r, rank_list);
                     % Obtain the different plots for the validation subset.
-                    [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v] = ...
+                    [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, ~, ~, ~, error_gp] = ...
                                         get_plot(valid_r, prec_r, recall_r, num_feats);
                                     
                     % Obtain the different plots for the test subset.
