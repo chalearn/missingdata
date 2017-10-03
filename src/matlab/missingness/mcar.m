@@ -71,10 +71,10 @@ else
             Dmiss = Dmiss';
             M_mcar = Dmiss(1:x,:);
             if (flag_valid)
-                Mt_mcar = Dmiss((x+1):(x+y),:);
+                Mv_mcar = Dmiss((x+1):(x+y),:);
             end
             if (flag_test)
-                Mv_mcar = Dmiss((x+y+1):end,:);
+                Mt_mcar = Dmiss((x+y+1):end,:);
             end
         otherwise
             error_m = 3;
