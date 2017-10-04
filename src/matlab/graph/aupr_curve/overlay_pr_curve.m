@@ -11,7 +11,7 @@ function h=overlay_pr_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-style_list = {'-r',':b','-m',':r','-b',':m'};
+style_list = {'-r','-.b','-k','-.m','-b','-.k','-m','-.r'};
 
 if nargin<5, e=[]; end
 if nargin<8 || isempty(old_h);
@@ -36,7 +36,9 @@ errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
 
 plot(x, y, style_list{pos}, 'MarkerSize', 6);
 if (pos == length(percent_l))
-    legend(percent_l,'FontSize',12)
+    line_data = findobj(h,'Type','line');
+    line_data = fliplr(line_data')';
+    legend(line_data, percent_l,'FontSize',12,'Location', 'southwest');
 end
     
 %plot([0 last_point], [1 1]);
@@ -52,6 +54,7 @@ end
 %text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
 xlabel('Recall');
 ylabel('Precision');
+set(gca,'fontsize',12);
 xl=xlim; yl=ylim;
 xlim([0 last_point]);
 ylim([0.5 1]);

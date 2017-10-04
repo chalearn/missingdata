@@ -11,7 +11,7 @@ function h=overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
 
 % Author: Isabelle Guyon -- November 2010 -- isabelle@clopinet.com
 
-style_list = {'-r',':b','-m',':r','-b',':m'};
+style_list = {'-r','-.b','-k','-.m','-b','-.k','-m','-.r'};
 
 if nargin<8 || isempty(old_h);
     h=figure;
@@ -40,6 +40,11 @@ if (pos == length(percent_l))
         percent_l{i} = [percent_l{i} ' = ' num2str(line_data(i).YData(end))];
     end
     legend(line_data, percent_l,'FontSize',12,'Location', 'southeast');
+    % Create an invisible axes at the same position as the legend
+    %hLegendAxes = axes('Parent',hleg.Parent, 'Units',hleg.Units, 'Position',hleg.Position, ...
+    %               'XTick',[] ,'YTick',[], 'Color','none', 'YColor','none', 'XColor','none', 'HandleVisibility','off', 'HitTest','off');
+    % Add the axes title (will appear directly above the legend box)
+    %title(hLegendAxes, 'AUROC values:', 'FontWeight','normal', 'FontSize',12);  % Default is bold-11, which is too large
 end
 %plot([0 last_point], [1 1]);
 %plot([last_point last_point], [rand_predict 1]);
@@ -53,11 +58,9 @@ end
 %text(last_point+1, final_score, num2str(final_score, '-%5.4f\n'));
 %text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
 xlabel('Log_2(Number of features)');
-ylabel('Area under the ROC curve (AUROC)');
+ylabel('ROC curves');
+set(gca,'fontsize',12);
+%ylabel('Area under the ROC curve (AUROC)');
 xl=xlim; yl=ylim;
 xlim([0 last_point]);
 ylim([0.5 1]);
-
-
-
-

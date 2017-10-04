@@ -2,6 +2,9 @@ function [ output_args ] = overlay_plot( fs_method, dataset_name )
 %OVERLAY_PLOT Summary of this function goes here
 %   Detailed explanation goes here
 
+    imput_list = {};
+    h_aupr_array = {};
+    h_aulc_array  = {};
     % Add the utils folder to Matlab path to start the file load process (including libs).
     utils_dir = ['..' filesep 'utils'];
     addpath(utils_dir);
@@ -29,29 +32,37 @@ function [ output_args ] = overlay_plot( fs_method, dataset_name )
             for p=1:length(miss_perc_fold)
                 percent_subroute_fold = [method_subroute_fold filesep miss_perc_fold(p).name];
                 aux_folds = dir([result_folder filesep percent_subroute_fold]);
-                miss_impt_fold = aux_folds(3:end);
+                miss_sol_fold = aux_folds(3:end);
                 percent_list{1,p} = [miss_perc_fold(p).name ' %'];
-                if (p == 1)
-                    imput_list = {miss_impt_fold(:).name}';
-                    h_aupr_array = cell(length(miss_impt_fold),length(miss_perc_fold));
-                    h_aulc_array = cell(length(miss_impt_fold),length(miss_perc_fold));
-                end
-                for i=1:length(miss_impt_fold)
-                    imput_subroute_fold = [percent_subroute_fold filesep miss_impt_fold(i).name];
-                    load([result_folder filesep imput_subroute_fold filesep 'data.mat']);
-                    imput_pos = find(ismember(imput_list, miss_impt_fold(i).name));
-                    [aux1, aux2, h_aulc_array{imput_pos,1}, h_aupr_array{imput_pos,1}, ~, ~, ~] = ...
-                                        get_overlay_plot(valid_r, prec_r, recall_r, num_feats, ...
-                                        h_aulc_array{imput_pos,1}, h_aupr_array{imput_pos,1}, ...
-                                        percent_list, p);
-                    for a=1:size(aux1,2);
-                        close(aux1{a});
+                
+                for s=1:length(miss_sol_fold)
+                    solution_subroute_fold = [percent_subroute_fold filesep miss_sol_fold(s).name];
+                    aux_folds = dir([result_folder filesep solution_subroute_fold]);
+                    miss_methsol_fold = aux_folds(3:end);
+                
+                    if (p == 1)
+                        imput_list = [imput_list; {miss_methsol_fold(:).name}'];
+                        h_aupr_array = [h_aupr_array; cell(length(miss_methsol_fold),length(miss_perc_fold))];
+                        h_aulc_array = [h_aulc_array; cell(length(miss_methsol_fold),length(miss_perc_fold))];
                     end
-                    close(aux2);
+                    
+                    for i=1:length(miss_methsol_fold)
+                        imput_subroute_fold = [solution_subroute_fold filesep miss_methsol_fold(i).name];
+                        load([result_folder filesep imput_subroute_fold filesep 'data.mat']);
+                        imput_pos = find(ismember(imput_list, miss_methsol_fold(i).name));
+                        [aux1, aux2, h_aulc_array{imput_pos,1}, h_aupr_array{imput_pos,1}, ~, ~, ~] = ...
+                                            get_overlay_plot(valid_r, prec_r, recall_r, num_feats, ...
+                                            h_aulc_array{imput_pos,1}, h_aupr_array{imput_pos,1}, ...
+                                            percent_list, p);
+                        for a=1:size(aux1,2);
+                            close(aux1{a});
+                        end
+                        close(aux2);
+                    end
+                    j=j+1;
                 end
-                j=j+1;
             end 
-            for i=1:length(miss_impt_fold)
+            for i=1:length(imput_list)
                 savefig(h_aulc_array{i,1}, [graphs_folder filesep method_subroute_fold filesep 'aulc_' imput_list{i}]);
                 close(h_aulc_array{i,1});
                 savefig(h_aupr_array{i,1}, [graphs_folder filesep method_subroute_fold filesep 'aupr_' imput_list{i}]);
