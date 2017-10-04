@@ -87,7 +87,7 @@ function [ output_args ] = analyze_dataset( dataset_name, fs_method )
                         [prec_r, error_m] = measures('prec', T_r, rank_list);
                         [recall_r, error_m] = measures('rec', T_r, rank_list);
                         % Obtain the different plots for the validation subset.
-                        [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, ~, ~, ~, error_gp] = ...
+                        [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v, error_gp] = ...
                                             get_plot(valid_r, prec_r, recall_r, num_feats);
 
                         % Obtain the different plots for the test subset.
