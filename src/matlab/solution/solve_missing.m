@@ -39,7 +39,7 @@ else
         case 'del'
             [D_sol, Dv_sol, Dt_sol, error_s] = deletion(solv_meth, D_miss, Dv_miss, Dt_miss);
         case 'imp'
-            [D_sol, Dv_sol, Dt_sol, error_s] = mar(solv_meth, D_miss, Dv_miss, Dt_miss);
+            [D_sol, Dv_sol, Dt_sol, error_s] = imputation(solv_meth, D_miss, Dv_miss, Dt_miss);
         otherwise
             error_s = 2;
     end

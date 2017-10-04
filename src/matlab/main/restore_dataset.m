@@ -1,5 +1,5 @@
 function [ error_rd ] = ...
-    restore_dataset( dataset_name, solution_type, solution_method )
+    restore_dataset( dataset_name, solution_type, solution_meth )
 %RESTORE_DATASET Restore a missing values dataset.
 % INPUT:
 %   dataset_name:   Name of the dataset.
@@ -23,14 +23,14 @@ else
     if (nargin<2 || isempty(solution_type))
         solution_type = {'del','imp'};
     end
-    if (nargin<3 || isempty(solution_method))
+    if (nargin<3 || isempty(solution_meth))
         del_t = {};%{'lwise', 'pwise'};
         imp_t = {'med','svd'};%,'lreg','corr'};
-        solution_method = cell(2,2);
-        solution_method{1,1} = 'del';
-        solution_method{2,1} = 'imp';
-        solution_method{1,2} = del_t;
-        solution_method{2,2} = imp_t;
+        solution_meth = cell(2,2);
+        solution_meth{1,1} = 'del';
+        solution_meth{2,1} = 'imp';
+        solution_meth{1,2} = del_t;
+        solution_meth{2,2} = imp_t;
     end
 
     % Set the dataset folder.
@@ -48,7 +48,7 @@ else
     utils_dir = ['..' filesep 'utils'];
     addpath(utils_dir);
     % Obtain the dir of each relevant folder in the repository.
-    [rootdir datadir graphsdir srcdir resultsdir] = load_path();
+    [~, datadir, ~, ~, ~] = load_path();
     
     % Obtain the dataset folder.
     data_orig_folder = [datadir filesep dataset_orig_folder filesep dataset_name];
@@ -81,15 +81,17 @@ else
                             load_dataset(perc_orig_fold, data_train_name, ...
                                         data_valid_name, data_test_name, ...
                                         data_feat_name);
-                for t=1:length(solution_type)
-                    data_solv_folder = [perc_dest_fold filesep solution_type{t}];
+                for st=1:length(solution_type)
+                    data_solv_folder = [perc_dest_fold filesep solution_type{st}];
                     mkdir(data_solv_folder);
-                    for i=1:length(solution_method)
-                        data_rest_folder = [data_solv_folder filesep solution_method{i}];
+                    pos_method = find(strcmp(solution_meth(:,1),solution_type(st)));
+                    for sm=1:length(solution_meth{pos_method,2})
+                        data_rest_folder = ...
+                            [data_solv_folder filesep solution_meth{pos_method,2}{sm}];
                         mkdir(data_rest_folder);
                         % Apply an imputation over the missing data values.
-                        [D_s, Dv_s, Dt_s, error_s] = ...
-                                    solve_missing(solution_type{t}, solution_method{i}, D_m, Dv_m, Dt_m);
+                        [D_s, Dv_s, Dt_s, error_s] = solve_missing(solution_type{t}, ...
+                                    solution_meth{pos_method,2}{sm}, D_m, Dv_m, Dt_m);
                         % Save dataset to the files.
                         [pftrain, pfvalid, pftest, pfprob, error_sd] = ...
                                     store_dataset( data_rest_folder, dataset_name, ...

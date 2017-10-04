@@ -58,7 +58,7 @@ else
         end
         if (nargin>6 && ~isempty(T))
             % Save the feat data to the files.
-            dlmwrite([fold_root_data filesep file_basename '_feat.data'], T, ' ');
+            dlmwrite([fold_root_data filesep file_basename '_feat.labels'], T, ' ');
         end
     end
 end
