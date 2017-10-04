@@ -58,9 +58,9 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
     AUPR = aupr(recall_r, prec_r);
     if (isempty(h_aupr_orig))
         h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, sigma_va, ...
-                                percent_list, position);
+                                true, true, percent_list, position);
     else h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, sigma_va, ...
-                                 percent_list, position, h_aupr_orig);
+                                 true, true, percent_list, position, h_aupr_orig);
     end
 end
 

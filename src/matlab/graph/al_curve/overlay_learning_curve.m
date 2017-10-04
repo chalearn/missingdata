@@ -33,18 +33,16 @@ final_score=y(end);
 errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
 
 plot(x, y, style_list{pos}, 'MarkerSize', 6);
-if (pos == length(percent_l))
+if (pos == length(percent_l))    
     line_data = findobj(h,'Type','line');
     line_data = fliplr(line_data')';
     for i=1:length(line_data)
         percent_l{i} = [percent_l{i} ' = ' num2str(line_data(i).YData(end))];
     end
-    legend(line_data, percent_l,'FontSize',12,'Location', 'southeast');
-    % Create an invisible axes at the same position as the legend
-    %hLegendAxes = axes('Parent',hleg.Parent, 'Units',hleg.Units, 'Position',hleg.Position, ...
-    %               'XTick',[] ,'YTick',[], 'Color','none', 'YColor','none', 'XColor','none', 'HandleVisibility','off', 'HitTest','off');
-    % Add the axes title (will appear directly above the legend box)
-    %title(hLegendAxes, 'AUROC values:', 'FontWeight','normal', 'FontSize',12);  % Default is bold-11, which is too large
+    legend(line_data, percent_l,'FontSize',16,'Location', 'southeast');
+    
+    plot([0 last_point], [1 1]);
+    plot([last_point last_point], [1 0]);
 end
 %plot([0 last_point], [1 1]);
 %plot([last_point last_point], [rand_predict 1]);
@@ -59,7 +57,7 @@ end
 %text(last_point+0.15, final_score, num2str(final_score, '\t%5.4f\n'));
 xlabel('Log_2(Number of features)');
 ylabel('ROC curves');
-set(gca,'fontsize',12);
+set(gca,'fontsize',16);
 %ylabel('Area under the ROC curve (AUROC)');
 xl=xlim; yl=ylim;
 xlim([0 last_point]);
