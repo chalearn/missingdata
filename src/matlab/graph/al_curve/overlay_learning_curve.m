@@ -1,6 +1,6 @@
 function [h, error_o] = overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
-%PLOT_LEARNING_CURVE Obtain the learning curve graph corresponding with the
-%                    values passed by parameter.
+%OVERLAY_LEARNING_CURVE Obtain the graph of a set of learning curves 
+%                       corresponding with the values passed by parameter.
 % INPUT:
 %   name:       Experiment name.
 %   score:      Result value.
