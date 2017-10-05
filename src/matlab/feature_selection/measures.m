@@ -24,7 +24,7 @@ error_m = 0;
 % Check the number of parameters.
 if (nargin<3)
     error_m = 1;
-else    
+else
     num_positive = length(find(T==1));
     num_negative = length(find(T==-1));
     num_feats = cell2mat(cellfun(@length, id_fs,'uni',false));
