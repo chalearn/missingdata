@@ -1,4 +1,5 @@
-function [h, error_o] = overlay_pr_curve(name, score, x, y, e, ideal, random, percent_l, pos, old_h)
+function [h, error_o] = overlay_pr_curve(name, score, x, y, e, ideal_x, ideal_y, ...
+                                         percent_l, pos, old_h)
 %OVERLAY_PR_CURVE Obtain the graph of a set of precission recall curves 
 %                 corresponding with the values passed by parameter.
 % INPUT:
@@ -7,8 +8,8 @@ function [h, error_o] = overlay_pr_curve(name, score, x, y, e, ideal, random, pe
 %   x:          Number of samples.
 %   y:          ROC performance.
 %   e:          Error bar.
-%   ideal:      Indicate if the ideal precision recall curve is added.
-%   random:     Indicate if the random precision recall curve is added.
+%   ideal_x:    Ideal x values that can be achieved.
+%   ideal_y:    Ideal y values that can be achieved.
 %   percent_l:  Array with percentage values to show in the plot.
 %   pos:        Position of the actual line to plot.
 %   old_h:      Plot handle.
@@ -49,21 +50,13 @@ else
 
     plot(x, y, style_list{pos}, 'MarkerSize', 6);
     if (pos == length(percent_l))
-        if (ideal)
-            plot([0 0.5 1], [1 1 0.5], ...
+        if (~isempty(ideal_x) && ~isempty(ideal_y))
+            plot(ideal_x, ideal_y, ...
                 'Color', [0.9100 0.4100 0.1700], ...
                 'LineStyle', '-', ...
                 'LineWidth', 2, ...
                 'MarkerSize', 6);
             percent_l = [percent_l 'Ideal'];
-        end
-        if (random)
-            plot([0 1], [1 0.5], ...
-                'Color',[0.9100 0.4100 0.1700], ...
-                'LineStyle', '-.', ...
-                'LineWidth', 2, ...
-                'MarkerSize', 6);
-            percent_l = [percent_l 'Random'];
         end
         line_data = findobj(h,'Type','line');
         line_data = fliplr(line_data')';

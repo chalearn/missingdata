@@ -1,16 +1,17 @@
 function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
-                            get_overlay_plot( test_r, prec_r, recall_r, num_feats, ...
+                            get_overlay_plot( test_r, prec_r, ideal_prec_r, ...
+                            recall_r, ideal_recall_r, num_feats, ...
                             h_aulc_orig, h_aupr_orig, percent_list, position )
 %GET_PLOT Summary of this function goes here
 %   Detailed explanation goes here
 
-    if (nargin<5) h_aulc_orig=[];
+    if (nargin<7) h_aulc_orig=[];
     end
-    if (nargin<6) h_aupr_orig=[];
+    if (nargin<8) h_aupr_orig=[];
     end
-    if (nargin<7) percent_list=[];
+    if (nargin<9) percent_list=[];
     end
-    if (nargin<8) position=1;
+    if (nargin<10) position=1;
     end
     num_plots = length(test_r);
 
@@ -58,9 +59,10 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR ] = ...
     AUPR = aupr(recall_r, prec_r);
     if (isempty(h_aupr_orig))
         h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, sigma_va, ...
-                                true, true, percent_list, position);
+                                ideal_recall_r, ideal_prec_r, percent_list, position);
     else h_aupr=overlay_pr_curve('PR curve', AUPR, recall_r, prec_r, sigma_va, ...
-                                 true, true, percent_list, position, h_aupr_orig);
+                                 ideal_recall_r, ideal_prec_r, percent_list, ...
+                                 position, h_aupr_orig);
     end
 end
 
