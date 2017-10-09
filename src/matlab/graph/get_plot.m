@@ -60,6 +60,6 @@ function [ cell_h_auroc, h_auroc, h_aulc, h_aupr, auc_va, AULC, AUPR, error_gp ]
     % Measure the discovery power with AUPR
     % Precision-recall curve (we use the same code...)
     AUPR = aupr(recall_r, prec_r);
-    h_aupr=plot_pr_curve('PR curve', AUPR, recall_r, prec_r);
+    h_aupr=plot_pr_curve('PR curve', AUPR, recall_r, prec_r, []);
 end
 
