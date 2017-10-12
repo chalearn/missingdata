@@ -80,17 +80,17 @@ function [ output_args ] = analyze_dataset( dataset_name, fs_method )
                                                      data_test_name, data_feat_name);
                         % Feature selection process.
                         [rank_list, num_feats, fs_error] = fs_rank(fs_method, 'log2', D_r);
+                        rank_total = rank_list{end};
                         % Classification with the different feature subsets.
                         [train_mod, train_r, valid_r, test_r, error_c] = ...
                                             classif('kridge', D_r, Dv_r, Dt_r, rank_list);
                         % Obtain the precission and recall values.
-                        [prec_r, error_m] = measures('prec', T_r, rank_list);
-                        [recall_r, error_m] = measures('rec', T_r, rank_list);
-                        rank_total = rank_list{end};
+                        [prec_r, error_m] = measures('prec', T_r, rank_total);
+                        [recall_r, error_m] = measures('rec', T_r, rank_total);
                         T_ideal = ones(size(T_r));
                         T_ideal(rank_total(length(find(T_r==-1))+1:end)) = -1;
-                        [ideal_prec_r, error_m] = measures('prec',T_ideal, rank_list);
-                        [ideal_recall_r, error_m] = measures('rec',T_ideal, rank_list);
+                        [ideal_prec_r, error_m] = measures('prec',T_ideal, rank_total);
+                        [ideal_recall_r, error_m] = measures('rec',T_ideal, rank_total);
                         % Obtain the different plots for the validation subset.
                         [cell_h_auroc, h_total_auroc, h_aulc, h_aupr, auroc_v, aulc_v, aupr_v, error_gp] = ...
                                             get_plot(valid_r, prec_r, recall_r, num_feats);
