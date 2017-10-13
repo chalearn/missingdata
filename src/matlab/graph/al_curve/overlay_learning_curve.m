@@ -1,4 +1,5 @@
-function [h, error_o] = overlay_learning_curve(name, score, x, y, e, percent_l, pos, old_h)
+function [h, error_o] = overlay_learning_curve(x, y, aulc_l, aulcerr_l, ...
+                                               percent_l, pos, old_h)
 %OVERLAY_LEARNING_CURVE Obtain the graph of a set of learning curves 
 %                       corresponding with the values passed by parameter.
 % INPUT:
@@ -22,10 +23,10 @@ error_o = 0;
 style_list = {'-r','-.b','-k','-.m','-b','-.k','-m','-.r'};
 
 % Check the number of parameters.
-if (nargin < 7)
+if (nargin < 6)
     error_o = 1;
 else
-    if (nargin > 7) && (~isempty(old_h))
+    if (nargin > 6) && (~isempty(old_h))
         h=figure(old_h);
     else
         h=figure;
@@ -42,14 +43,15 @@ else
     %patch([x last_point 0 0], [y rand_predict rand_predict y(1)], [1 0.9 0.6]);
 
     % Plot the curve with error bars
-    errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
+    %errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
 
     plot(x, y, style_list{pos}, 'MarkerSize', 6);
     if (pos == length(percent_l))    
         line_data = findobj(h,'Type','line');
         line_data = fliplr(line_data')';
         for i=1:length(line_data)
-            percent_l{i} = [percent_l{i} ' = ' num2str(line_data(i).YData(end))];
+            percent_l{i} = [percent_l{i} ' = ' ...
+                            num2str(aulc_l(i)) '+-' num2str(aulcerr_l(i))];
         end
         legend(line_data, percent_l,'FontSize',16,'Location', 'southeast');
 

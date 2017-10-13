@@ -46,25 +46,26 @@ else
     %patch([x last_point 0 0], [y 0 0 y(1)], [1 0.9 0.6]);
 
     % Plot the curve with error bars
-    errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
+    % Plot the curve with error bars
+    if ~isempty(e)
+        errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
+    end
 
-    plot(x, y, style_list{pos}, 'MarkerSize', 6);
+    plot(x, y, style_list{pos}, 'LineWidth', 2);
     if (pos == length(percent_l))
         if (~isempty(ideal_x) && ~isempty(ideal_y))
             plot(ideal_x, ideal_y, ...
                 'Color', [0.9100 0.4100 0.1700], ...
                 'LineStyle', '-', ...
-                'Marker', 'o', ...
-                'LineWidth', 2, ...
-                'MarkerSize', 6);
+                'LineWidth', 3);
             percent_l = [percent_l 'Ideal'];
         end
         line_data = findobj(h,'Type','line');
         line_data = fliplr(line_data')';
         legend(line_data, percent_l,'FontSize',16,'Location', 'southwest');
 
-        plot([0 1], [1 1], '-b');
-        plot([1 1], [1 0], '-b');
+        %plot([0 1], [1 1], '-b');
+        %plot([1 1], [1 0], '-b');
     end
 
     %plot([0 last_point], [1 1]);
