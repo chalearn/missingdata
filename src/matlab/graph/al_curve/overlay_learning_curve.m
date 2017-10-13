@@ -45,15 +45,15 @@ else
     % Plot the curve with error bars
     %errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
 
-    plot(x, y, style_list{pos}, 'MarkerSize', 6);
+    plot(x, y, style_list{pos}, 'LineWidth', 1);
     if (pos == length(percent_l))    
         line_data = findobj(h,'Type','line');
         line_data = fliplr(line_data')';
         for i=1:length(line_data)
             percent_l{i} = [percent_l{i} ' = ' ...
-                            num2str(aulc_l(i)) '+-' num2str(aulcerr_l(i))];
+                            num2str(round(aulc_l(i),5)) '+-' num2str(round(aulcerr_l(i),5))];
         end
-        legend(line_data, percent_l,'FontSize',16,'Location', 'southeast');
+        legend(line_data, percent_l,'FontSize',16,'Location','southeast');
 
         plot([0 last_point], [1 1]);
         plot([last_point last_point], [1 0]);

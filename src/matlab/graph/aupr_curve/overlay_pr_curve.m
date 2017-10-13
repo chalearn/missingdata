@@ -48,16 +48,16 @@ else
     % Plot the curve with error bars
     % Plot the curve with error bars
     if ~isempty(e)
-        errorbar(x, y, e, style_list{pos}, 'LineWidth', 2);
+        errorbar(x, y, e, style_list{pos}, 'LineWidth', 1);
     end
 
-    plot(x, y, style_list{pos}, 'LineWidth', 2);
+    plot(x, y, style_list{pos}, 'LineWidth', 1);
     if (pos == length(percent_l))
         if (~isempty(ideal_x) && ~isempty(ideal_y))
             plot(ideal_x, ideal_y, ...
                 'Color', [0.9100 0.4100 0.1700], ...
                 'LineStyle', '-', ...
-                'LineWidth', 3);
+                'LineWidth', 2);
             percent_l = [percent_l 'Ideal'];
         end
         line_data = findobj(h,'Type','line');
