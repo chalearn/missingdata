@@ -1,6 +1,6 @@
 function [ output_args ] = analyze_dataset( dataset_name, fs_method )
 %ANALYZE_DATASET 
-% fs_method = s2n, ttest
+% fs_method = s2n, ttest, ktest
 
     % Set the name of dataset folder.
     name_orig_folder = 'orig_dataset';

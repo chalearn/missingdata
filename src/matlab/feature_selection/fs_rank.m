@@ -5,6 +5,7 @@ function [ id_fs, size_fs, error_fs ] = fs_rank( fs_method, th_method, D_fs)
 %   fs_method:  Number that represents the FS method.
 %                   's2n'   - s2n
 %                   'ttest' - ttest
+%                   'ktest' - kristin's test
 %   th_method:  Number that represents the threshold method.
 %                   'log2'  - log2n
 %   D_fs:       Data type that represents the dataset to be analyzed.
@@ -36,12 +37,21 @@ else
             fpos = selected_features.fidx;
         case 'ttest' % t-test method
             % Ordered all the features of the dataset.
-            tvalue=zeros(1,N);
+            pvalue=zeros(1,N);
             for f=1:N
                 feat = D_fs.X(:,f);
-                [~, tvalue(1,f)] = ttest(feat(~isnan(feat)));
+                [~, pvalue(1,f)] = ttest(feat(~isnan(feat)));
             end
-            [ord, fpos] = sort(tvalue,'descend');
+            [ord, fpos] = sort(pvalue,'descend');
+            fpos = [fpos(~isnan(ord)) fpos(isnan(ord))];
+        case 'ktest' % Kristin's test method
+            % Ordered all the features of the dataset.
+            pvalue=zeros(1,N);
+            for f=1:N
+                feat = D_fs.X(:,f);
+                [~, pvalue(1,f)] = ktest(feat(~isnan(feat)));
+            end
+            [ord, fpos] = sort(pvalue,'descend');
             fpos = [fpos(~isnan(ord)) fpos(isnan(ord))];
         otherwise
             error_fs = 2;
