@@ -38,7 +38,7 @@ else
         missing_meth{3,2} = mnar_t;
     end    
     if (nargin<4 || isempty(missing_perc))
-        missing_perc = [0, 30, 60, 80, 90];
+        missing_perc = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
     end
     if (nargin<5 || isempty(bool_probe))
         bool_probe = false;
