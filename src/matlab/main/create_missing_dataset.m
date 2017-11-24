@@ -6,7 +6,8 @@ function [ error_md ] = create_missing_dataset( dataset_name, missing_type, ...
 %   missing_type:   Cell array with the name of missing types.
 %   missing_meth:   Cell array with the name of missing methods.
 %   missing_perc:   Cell array with the missing percentage values.
-%   bool_probe:     
+%   bool_probe:     Boolean which indicates if you want to generate probes
+%                   (true) or not (false). Default value is set to false.
 % OUTPUT:
 %   error_md:       Possible error when the function is executed:
 %                       0 - No error.

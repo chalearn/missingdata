@@ -82,8 +82,3 @@ save([results_folder filesep 'data_' dataset_type], 'rank_list', 'num_feats', ..
      'auroc', 'aulc', 'aupr')
 
 fprintf('\n ========== END =========\n');
-
-% Todo: 
-% Vary the proportion of missing data (percent = 0, 10, 20, 40, 80)
-% Replace missing data by median
-% Compute ALC and AUPR for all proportions of missing data
