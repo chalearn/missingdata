@@ -4,7 +4,10 @@ function [ error_rd ] = ...
 % INPUT:
 %   dataset_name:   Name of the dataset.
 %   solution_type:  Cell array with the name of solution types.
-%   solution_meth:  Cell array with the name of solution methods.
+%                   'imp'   - imputation
+%   solution_meth:  Cell array with the name of solution methods. For more
+%                   information look at the definition of each solution
+%                   function.
 % OUTPUT:
 %   error_rd:       Possible error when the function is executed:
 %                       0 - No error.
@@ -14,23 +17,40 @@ function [ error_rd ] = ...
 % Set the initial value of return variables.
 error_rd = 0;
 
+
+%del_t = {};%{'lwise', 'pwise'};
+imp_t = {'med','svd'};%,'lreg','corr'};
+%solution_meth = cell(2,2);
+solution_meth_cell = cell(1,2);
+%solution_meth{1,1} = 'del';
+%solution_meth{2,1} = 'imp';
+solution_meth_cell{1,1} = 'imp';
+%solution_meth{1,2} = del_t;
+%solution_meth{2,2} = imp_t;
+solution_meth_cell{1,2} = imp_t;
+
 % Check the number of parameters.
 if (nargin<1)
     error_rd = 1;
 elseif (isempty(dataset_name))
     error_rd = 2;
 else
-    if (nargin<2 || isempty(solution_type))
-        solution_type = {'del','imp'};
-    end
-    if (nargin<3 || isempty(solution_meth))
-        del_t = {};%{'lwise', 'pwise'};
-        imp_t = {'med','svd'};%,'lreg','corr'};
-        solution_meth = cell(2,2);
-        solution_meth{1,1} = 'del';
-        solution_meth{2,1} = 'imp';
-        solution_meth{1,2} = del_t;
-        solution_meth{2,2} = imp_t;
+     if (nargin>3 && ~isempty(solution_type) && ~isempty(solution_meth))
+        aux_meth_cell = solution_meth_cell;
+        solution_meth_cell = cell(size(solution_type,2),size(solution_meth,2));
+        for i=1:size(solution_type,2)
+            pos_type = find(strcmp(aux_meth_cell(:,1),solution_type(i)));
+            if (~isempty(pos_type))
+                solution_meth_cell{pos_type,1} = solution_type{i};
+                aux_method = {};
+                for j=1:size(solution_meth,2)
+                    if (~isempty(find(strcmp(aux_meth_cell{pos_type,2},solution_meth(j)))))
+                        aux_method = [aux_method, solution_meth{j}];
+                    end
+                end
+                solution_meth_cell{pos_type,2} = aux_method;
+            end
+        end
     end
 
     % Set the dataset folder.
@@ -53,7 +73,7 @@ else
     % Obtain the dataset folder.
     data_orig_folder = [datadir filesep dataset_orig_folder filesep dataset_name];
     
-    % Create a folder to save the different missing datasets.
+    % Create a folder to save the different restored datasets.
     data_dest_folder = [datadir filesep dataset_dest_folder filesep dataset_name];
     mkdir(data_dest_folder);
     
@@ -81,17 +101,16 @@ else
                             load_dataset(perc_orig_fold, data_train_name, ...
                                         data_valid_name, data_test_name, ...
                                         data_feat_name);
-                for st=1:length(solution_type)
-                    data_solv_folder = [perc_dest_fold filesep solution_type{st}];
+                for st=1:size(solution_meth_cell,1)
+                    data_solv_folder = [perc_dest_fold filesep solution_meth_cell{st,1}];
                     mkdir(data_solv_folder);
-                    pos_method = find(strcmp(solution_meth(:,1),solution_type(st)));
-                    for sm=1:length(solution_meth{pos_method,2})
+                    for sm=1:length(solution_meth_cell{st,2})
                         data_rest_folder = ...
-                            [data_solv_folder filesep solution_meth{pos_method,2}{sm}];
+                            [data_solv_folder filesep solution_meth_cell{st,2}{sm}];
                         mkdir(data_rest_folder);
                         % Apply an imputation over the missing data values.
-                        [D_s, Dv_s, Dt_s, error_s] = solve_missing(solution_type{t}, ...
-                                    solution_meth{pos_method,2}{sm}, D_m, Dv_m, Dt_m);
+                        [D_s, Dv_s, Dt_s, error_s] = solve_missing(solution_meth_cell{st,1}, ...
+                                    solution_meth_cell{st,2}{sm}, D_m, Dv_m, Dt_m);
                         % Save dataset to the files.
                         [pftrain, pfvalid, pftest, pfprob, error_sd] = ...
                                     store_dataset( data_rest_folder, dataset_name, ...
