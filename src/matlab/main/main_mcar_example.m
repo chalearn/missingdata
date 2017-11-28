@@ -19,7 +19,7 @@ if (~error_md)
     error_rd = restore_dataset( dataset_name, solution_type, solution_meth );
     if (~error_rd)
         % Obtain plots and results obtained from the analysis.
-        error_ad = analyze_dataset( data_name, fs_method );
+        error_ad = analyze_dataset( dataset_name, fs_method );
         if (~error_ad)
             msgbox('Operation Completed','Success');
         else
