@@ -1,0 +1,8 @@
+data/miss_dataset/*
+!data/miss_dataset/README.md
+data/rest_dataset/*
+!data/rest_dataet/README.md
+graphs/*
+!graphs/README.md
+results/*
+!results/README.md
