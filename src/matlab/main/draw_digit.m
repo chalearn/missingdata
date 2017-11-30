@@ -1,13 +1,13 @@
-function [M1, M2, M3, error_dd] = draw_digit(D_orig, M_miss, D_imp, F_orig)
+function [M1, M2, M3, error_dd] = draw_digit(D_orig, D_miss, D_imp, F_orig)
 %DRAW_DIGIT Draw digits inside D_orig data object. This function can draw
 %           missing pixels (red dot) and imputation values, obtaining a 
 %           maximum of three different subplots inside figure.
 % INPUT:
 %   D_orig:     Data type that represents the original dataset that will be
 %               drawn.
-%   M_miss:     Missing matrix that represents the missing positions in
-%               D_orig dataset. If this variable is empty, it will not be
-%               drawn the digit with missing values.
+%   D_miss:     Data type that represents the missingness dataset that will be
+%               drawn. If this variable is empty, it will not be
+%               drawn the digit with imputed values.
 %   D_imp:      Data type that represents the imputed dataset that will be
 %               drawn. If this variable is empty, it will not be
 %               drawn the digit with imputed values.
@@ -48,7 +48,7 @@ nsubplot = 1;
 if (nargin<1)
     error_dd = 1;
 else
-    if (nargin > 1 && ~isempty(M_miss))
+    if (nargin > 1 && ~isempty(D_miss))
             flag_miss = 1;
             nsubplot=nsubplot+1;
     end
@@ -60,12 +60,10 @@ else
             flag_f = 1;
     end
 
-    convert_pix=0;
     feat_idx=[];
     feat_loc=[];
     
     if (flag_f)
-        convert_pix=1;
         kk=0;
         for k=1:length(F_orig)
             ff=F_orig{k};
@@ -79,11 +77,6 @@ else
         end
     end
     
-    if (flag_miss)
-        D_miss = D_orig;
-        D_miss.X = D_orig.X .* ~M_miss;
-    end
-
     figure('name', 'MNIST browser');
     num=0;
     while 1
@@ -99,28 +92,27 @@ else
             otherwise
                 num=idx;
         end
-        
-        M1=D_orig.X(num,:);
-        if (flag_miss)
-            M2=D_miss(num,:);
-            MM2=M_miss(num,:);
-        end
-        if (flag_imp)
-            M3=D_imp.X(num,:);
-        end
-        
+               
         if (flag_f)
             M1=zeros(1,28*28);
             M1(feat_idx)=D_orig.X(num,feat_loc);
             if (flag_miss)
                 M2=zeros(1,28*28);
                 M2(feat_idx)=D_miss.X(num,feat_loc);
-                MM2=zeros(1,28*28);
-                MM2(feat_idx)=M_miss(num,feat_loc);
+                MM2=isnan(M2);
             end
             if (flag_imp)
                 M3=zeros(1,28*28);
                 M3(feat_idx)=D_imp.X(num,feat_loc);
+            end
+        else
+            M1=D_orig.X(num,:);
+            if (flag_miss)
+                M2=D_miss.X(num,:);
+                MM2=isnan(M2);
+            end
+            if (flag_imp)
+                M3=D_imp.X(num,:);
             end
         end
         possubplot=1;
@@ -131,7 +123,7 @@ else
         possubplot=possubplot+1;
         if (flag_miss)
             subplot(1,nsubplot,possubplot);
-            show_digit(M2,MM2);
+            show_digit(M2, MM2, 'r');
             title('Missing');
             possubplot=possubplot+1;
         end
