@@ -1,102 +1,13 @@
-# Missing Data Repository
+# Missing data experiments
+This repository contains a framework to generate, impute and analize missing data and imputation bias on different datasets. We have developed different missing data mechanisms: both MCAR, MAR and MNAR; and different imputation methods: median and SVD. Our goal is to study the risk/benefit tradeoff of missing value imputation in the context of feature selection. We caution against using imputation methods that may yield false positives: features not associated to the target becoming dependent as a result of imputation. We also investigate situations in which imputing missing values may be beneficial to reduce false negatives.
 
-*************************************************************
-**BASIC INFORMATION**
+## Repository content
+- **causal_relation**: Contains main functions that allow to reproduce different causal relationships between three variables (source variable *S*, helper variable *H* and target variable *T*), allowing the generation and imputation of missing data in *S* with *H*.
+- **graph**: Contains functions that graphically represent the results obtained in different causal relationships.
+- **libs**: Contains base library functions used in this work.
+- **statistics**: Contains different statistic functions used in this work, ranging from original T-test to different modifications of this statistic test.
+- **utils**: Contains general purpose functions.
 
-Research repository for storage software and solutions for missing data problems. The repository is original divided in two branch:
-
-1. The **master** branch: to store final complete functionally versions.
-2. The **develop** branch to develop new implementations and modify the existing ones.
-
-If parallel developments are necessary it is possible to create new branches. Some commands and informations are detailed below. 
-
-*************************************************************
-**FIRST STEPS**
-
-Please, follow the next command sequence to clone and prepare the repository to work on it for the first time:
-
-1. Clone the repository:
-
-		# git clone https://github.com/chalearn/missingdata
-
-2. Change the branch to the develop branch (by default the master branch is used):
-
-		# git checkout develop
-
-3. Set up your personal configuration (name and email address):
-
-		# git config --global user.email "you@example.com"
-
-		# git config --global user.name "your name"
-
-*************************************************************
-**UPLOAD REPOSITORY PROCESS**
-
-To upload your local changes to the GitHub repository follow the next command sequence:
-
-1. Previously to the commit step, add the local change files:
-
-		# git add <files to commit>
-
-	If you want to add the changes of a complete folder use:
-
-		# git add <folder name> or 
-
-		# cd <folder name> and # git add .
-
-2. Commit the changes to your local repository (add a significant information message about the changes realized):
-
-		# git commit -m "Information message betwenn quotation marks"
-
-3. Push the changes to the central repository (in the same branch that you are working):
-
-		# git push
-
-4. Push the changes to the master branch. This option will be used only when the developed code works correctly and a final version can be released:
-
-		# git checkout master
-
-		# git merge <branch name>
-
-		# git push
-
-*************************************************************
-**DOWNLOAD REPOSITORY PROCESS**
-
-It must be **always** performed **before** you begin **working**. To download the changes from the GitHub repository to own local copy follow the next command sequence:
-
-1. Obtain the GitHub changes:
-
-		# git pull
-
-*************************************************************
-**USEFUL EXTRA INFORMATION**
-
-- Useful commands to interact with GitHub platform are shown below:
-
- - Show the status of your local files and check the branch in wich you are working actually:
-
-			# git status
-
- - Change between diferent branches:
-
-			# git checkout <branch name>
-
- - Create new branch:
-
-			# git checkout -b <branch name>
-
- - Delete existing branch:
-
-			# git checkout -d <branch name>
-
- - Change the default message editor:
-		
-			# git config --global core.editor "<editor name>"
-		
-- Interesting webs about using/download GitHub and Git framwork:
-
- - [Web Page](http://rogerdudler.github.io/git-guide/)
- - [Git Framework Download](https://git-scm.com/)
-
-*************************************************************
+## Experimental reproduction
+1. Add all the project folders to Matlab path.
+2. Execute the desired function of *causal_relation* folder.
